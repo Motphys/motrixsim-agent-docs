@@ -88,7 +88,8 @@ Settings that affect the quality of rendering.
 
 | Name | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
-| `shadowsize` | `int` | yes | `4096` | This attribute specifies the size of the square texture used for shadow mapping. Higher  values result is smoother shadows. The size of the area over which a light can cast shadows  also affects smoothness, so these settings should be adjusted jointly. |
+| `shadowsize` | `int` | yes | `1024` | This attribute specifies the size of the square texture used for directional and spot light  shadow mapping. Higher values result is smoother shadows. The size of the area over  which a light can cast shadows also affects smoothness, so these settings should be  adjusted jointly. |
+| `pointshadowsize` | `int` | yes | `512` | This attribute specifies the size of the square texture used for point light shadow  mapping. Higher values result is smoother shadows. The size of the area over which a  light can cast shadows also affects smoothness, so these settings should be adjusted  jointly. |
 
 ## visual/map
 

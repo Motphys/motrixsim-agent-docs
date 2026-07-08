@@ -3,7 +3,7 @@
 **Path**: `asset`
 **Tag**: `asset`
 **Parent**: `mujoco`
-**Children**: `asset/material`, `asset/mesh`, `asset/texture`, `asset/hfield`, `asset/model`
+**Children**: `asset/material`, `asset/mesh`, `asset/texture`, `asset/hfield`, `asset/gsplat`, `asset/model`
 **Rust Type**: `model::asset::Asset`
 
 This is a grouping element for defining assets. It does not have
@@ -39,13 +39,13 @@ This element creates a material asset. It can be referenced from
 | `name` | `string` | no | — | Name of the material, used for referencing. |
 | `class` | `string` | no | — | Defaults class for setting unspecified attributes. |
 | `rgba` | `real(4)` | yes | `"1. 1. 1. 1."` | Color and transparency of the material. All components should be in the  range [0 1]. Note that the texture color (if assigned) and the color  specified here are multiplied component-wise. Thus the default value of  \"1 1 1 1\" has the effect of leaving the texture unchanged. When the  material is applied to a model element which defines its own local rgba  attribute, the local definition has precedence. The remaining material  properties always apply. |
-| `texture` | `string` | no | — | If this attribute is specified, the material has a texture associated  with it. Referencing the material from a model element will cause the  texture to be applied to that element. The value of this attribute is  the name of a texture asset, not a texture file name. Textures cannot  be loaded in the material definition; instead they must be loaded  explicitly via the texture element and then referenced here. The  texture referenced here is used for specifying the RGB values. For  advanced rendering (e.g., Physics-Based Rendering), more texture types  need to be specified. In that case, this texture attribute should be  omitted, and the texture types should be specified using layer child  elements. Note that the built-in renderer does not support PBR  properties, so these advanced rendering features are only available  when using an external renderer. |
+| `texture` | `string` | no | — | If this attribute is specified, the material has a texture associated  with it. Referencing the material from a model element will cause the  texture to be applied to that element. The value of this attribute is  the name of a texture asset, not a texture file name. Textures cannot  be loaded in the material definition; instead they must be loaded  explicitly via the texture element and then referenced here. The  texture referenced here is used for specifying the RGB values. For  advanced rendering (e.g., Physics-Based Rendering), more texture types  need to be specified. In that case, this texture attribute should be  omitted, and the texture types should be specified using layer child  elements. The built-in renderer supports PBR, so these advanced  rendering features can be rendered directly once the corresponding  texture types are provided via the layer child elements. |
 | `texuniform` | `bool` | yes | `false` | For cube textures, this attribute controls how cube mapping is applied.  The value \"false\" means apply cube mapping directly, using the actual  size of the object. The value \"true\" maps the texture to a unit object  before scaling it to its actual size. For 2d textures, this attribute  interacts with texrepeat: when \"false\", the 2d texture is repeated N  times over the object; when \"true\", the texture is repeated N times  over one spatial unit, regardless of object size. |
 | `texrepeat` | `real(2)` | yes | `"1. 1."` | This attribute applies to textures of type \"2d\". It specifies how many  times the texture image is repeated, relative to either the object size  or the spatial unit, as determined by the texuniform attribute. |
-| `reflectance` | `real` | yes | `0.0` | This attribute should be in the range [0 1]. If the value is greater  than 0, and the material is applied to a plane or a box geom, the  renderer will simulate reflectance. The larger the value, the stronger  the reflectance. For boxes, only the face in the direction of the local  +Z axis is reflective. Simulating reflectance properly requires  ray-tracing. Only the first reflective geom in the model is rendered  as such. |
-| `metallic` | `real` | yes | `0.0` | This attribute corresponds to uniform metallicity coefficient applied to  the entire material. This attribute is only used by physically-based  renderers and has no effect in Phong-based rendering. If a non-negative  value is specified, this metallic value should be multiplied by the  metallic texture sampled value to obtain the final metallicity of the material. |
-| `roughness` | `real` | yes | `0.0` | This attribute corresponds to uniform roughness coefficient applied to  the entire material. This attribute is only used by physically-based  renderers and has no effect in Phong-based rendering. If a non-negative  value is specified, this roughness value should be multiplied by the  roughness texture sampled value to obtain the final roughness of the material. |
-| `emission` | `real(4)` | yes | `"0. 0. 0. 0."` | Emission in OpenGL has the RGBA format, however we only provide a scalar  setting. The RGB components of the OpenGL emission vector are the RGB  components of the material color multiplied by the value specified here.  The alpha component is 1. |
+| `reflectance` | `real` | yes | `0.0` | This attribute should be in the range [0 1]. It controls the specular  reflectance of the material in the built-in physically-based renderer:  the larger the value, the stronger the reflection. Unlike a planar  mirror, it is a per-material property and applies to every geom that  references this material, regardless of the geom shape. |
+| `metallic` | `real` | yes | `0.0` | This attribute corresponds to uniform metallicity coefficient applied to  the entire material, used by the built-in physically-based renderer. If a  non-negative value is specified, this metallic value should be multiplied by the  metallic texture sampled value to obtain the final metallicity of the material. |
+| `roughness` | `real` | yes | `0.0` | This attribute corresponds to uniform roughness coefficient applied to  the entire material, used by the built-in physically-based renderer. If a  non-negative value is specified, this roughness value should be multiplied by the  roughness texture sampled value to obtain the final roughness of the material. |
+| `emission` | `real(4)` | yes | `"0. 0. 0. 0."` | Emissive color of the material in RGBA format. The emissive contribution  is this color scaled by the emissionintensity attribute. Use  emissionintensity to control the overall strength of the emission. |
 | `emissionintensity` | `real` | yes | `0.0` | [MPEX] Emission intensity multiplier applied on top of the emission color. |
 | `detailpara` | `real(4)` | yes | `"1. 1. 1. 1."` | [MPEX] Detail normal map parameters packed as four  floats: x = detail normal map u scale, y = detail normal map v scale,  z = normal strength, w = padding. |
 | `depthbias` | `int` | yes | `0` | [MPEX] Depth bias for rendering. |
@@ -64,17 +64,19 @@ This element creates a mesh asset, which can then be referenced from geoms.
  model, otherwise a geometric primitive is automatically fitted to it.
 
  The parser works with triangulated meshes. They can be loaded from binary
- STL files, OBJ files or MSH files with a custom format, or vertex and face
- data can be specified directly in the XML. While any collection of triangles
- can be loaded as a mesh and rendered, collision detection works with the
- convex hull of the mesh. The mesh appearance (including texture mapping) is
- controlled by the material and rgba attributes of the referencing geom.
+ STL files, OBJ files, glTF/GLB files or COLLADA (.dae) files, or vertex and
+ face data can be specified directly in the XML. The legacy MSH binary mesh
+ format is not supported; convert such meshes to OBJ or glTF. While any
+ collection of triangles can be loaded as a mesh and rendered, collision
+ detection works with the convex hull of the mesh. The mesh appearance
+ (including texture mapping) is controlled by the material and rgba attributes
+ of the referencing geom.
 
  Meshes can have explicit texture coordinates instead of relying on the
  automated texture mapping mechanism. When provided, these explicit
- coordinates have priority. Texture coordinates can be specified with OBJ
- files and MSH files, as well as explicitly in the XML with the texcoord
- attribute, but not via STL files.
+ coordinates have priority. Texture coordinates can be specified with OBJ and
+ glTF files, as well as explicitly in the XML with the texcoord attribute, but
+ not via STL files.
 
  The size of the mesh is determined by the 3D coordinates of the vertex data
  multiplied by the components of the scale attribute. Scaling is applied
@@ -98,7 +100,7 @@ Note
 |------|------|----------|---------|-------------|
 | `name` | `string` | yes | — | Name of the mesh, used for referencing. If omitted, the mesh name equals  the file name without the path and extension. |
 | `class` | `string` | no | — | Defaults class for setting unspecified attributes (only scale in this case). |
-| `file` | `string` | no | — | The file from which the mesh will be loaded. The path is determined as  described in the meshdir attribute of the compiler element. The file  extension must be \"stl\", \"msh\", or \"obj\" (not case sensitive) specifying  the file type. If the file name is omitted, the vertex attribute becomes  required. |
+| `file` | `string` | no | — | The file from which the mesh will be loaded. The path is determined as  described in the meshdir attribute of the compiler element. The file  extension must be \"stl\", \"obj\", \"gltf\", \"glb\", or \"dae\" (not case  sensitive) specifying the file type. If the file name is omitted, the  vertex attribute becomes required. |
 | `scale` | `real(3)` | no | — | This attribute specifies the scaling that will be applied to the vertex  data along each coordinate axis. Negative values are allowed, resulting  in flipping the mesh along the corresponding axis. |
 | `vertex` | `string` | no | — | Vertex 3D position data. You can specify position data in the XML using  this attribute, or using a binary file, but not both. |
 | `texcoord` | `string` | no | — | Vertex 2D texture coordinates, which are numbers between 0 and 1. If  specified, the number of texture coordinate pairs must equal the number  of vertices. |
@@ -106,6 +108,7 @@ Note
 | `face` | `string` | no | — | Faces of the mesh. Each face is a sequence of 3 vertex indices, in  counter-clockwise order. The indices must be integers between 0 and  nvert-1. |
 | `refpos` | `real(3)` | no | — | Reference position relative to which the 3D vertex coordinates are  defined. This vector is subtracted from the positions. |
 | `refquat` | `real(4)` | no | — | Reference orientation relative to which the 3D vertex coordinates and  normals are defined. The conjugate of this quaternion is used to rotate  the positions and normals. The model compiler normalizes the quaternion  automatically. |
+| `acd` | `bool` | yes | `false` | [MPEX] Override whether this mesh asset participates in convex decomposition. |
 
 ## asset/texture
 
@@ -198,6 +201,24 @@ Note
 | `ncol` | `int` | yes | `0` | This attribute specifies the number of columns in the elevation data  matrix. |
 | `elevation` | `real(n)` | no | — | This attribute specifies the elevation data matrix. Values are  automatically normalized to lie between 0 and 1 by first subtracting  the minimum value and then dividing by the (maximum-minimum) difference.  If not provided, values are set to 0. Note that the row order in the model  is flipped with respect to the order in XML, i.e., it is bottom-to-top. |
 | `size` | `real(4)` | yes | `""` | The four numbers here are (radius_x, radius_y, elevation_z, base_z).  The height field is centered at the referencing geom's local frame.  Elevation is in the +Z direction. The first two numbers specify the X  and Y extent (or \"radius\") of the rectangle over which the height field  is defined. The third number is the maximum elevation; it scales the  elevation data which is normalized to [0-1], so the minimum elevation  is at Z=0 and the maximum is at Z=elevation_z. The last number is the  depth of a box in the -Z direction serving as a \"base\" for the height  field, ensuring non-zero thickness at places where the normalized  elevation data is zero. |
+
+## asset/gsplat [PRO]
+
+**Path**: `asset/gsplat`
+**Tag**: `gsplat`
+**Parent**: `asset`
+**Children**: none
+**Rust Type**: `model::asset::GaussianCloud`
+
+This element creates a reusable Gaussian cloud asset.
+
+### Attributes
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `name` | `string` | yes | `""""` | [PRO] Name used by body and world Gaussian cloud instances. |
+| `file` | `string` | yes | `""""` | [PRO] Gaussian cloud file path. |
+| `content_type` | `string` | no | — | [PRO] Optional media type of the Gaussian cloud file. |
 
 ## asset/model
 

@@ -59,7 +59,7 @@ def rgb(r: float, g: float, b: float) -> Color
 ```
 
 Create a color with red, green, blue. Each value should be in the range [0.0, 1.0].
-        
+
         Args:
             r: Red component.
             g: Green component.

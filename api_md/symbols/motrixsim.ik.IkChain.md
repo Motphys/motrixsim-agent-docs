@@ -3,7 +3,7 @@
 Module: [`motrixsim.ik`](../modules/motrixsim.ik.md)
 
 Represents a kinematic chain for inverse kinematics (IK) solving.
-    
+
     Args:
         model: The scene model containing the kinematic structure.
         end_link: The name of the end link of the IK chain.
@@ -31,7 +31,7 @@ num_dof_pos: int
 ```
 
 Get the number of DoF positions in the IK chain.
-    
+
     Returns:
         int: The number of degree of freedom positions.
 
@@ -42,7 +42,7 @@ num_dof_vel: int
 ```
 
 Get the number of DoF velocities in the IK chain.
-    
+
     Returns:
         int: The number of degree of freedom velocities.
 
@@ -53,7 +53,7 @@ num_links: int
 ```
 
 Get the number of links in the IK chain.
-    
+
     Returns:
         int: The number of links in the chain.
 
@@ -85,10 +85,10 @@ def get_bias_force(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
 ```
 
 Get the joint space bias force of the chain.
-        
+
         Args:
             data: The scene data containing the current state.
-        
+
         Returns:
             ndarray: The joint space bias force of the chain. Shape: ``(*data.shape, num_dof_vel)``.
 
@@ -99,10 +99,10 @@ def get_dof_pos(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
 ```
 
 Get the DoF positions of the IK chain from the simulation data.
-        
+
         Args:
             data: The scene data containing the current state.
-        
+
         Returns:
             ndarray: The DoF positions of the chain. Shape: ``(*data.shape, num_dof_pos)``.
 
@@ -113,10 +113,10 @@ def get_dof_vel(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
 ```
 
 Get the DoF velocities of the IK chain from the simulation data.
-        
+
         Args:
             data: The scene data containing the current state.
-        
+
         Returns:
             ndarray: The DoF velocities of the chain. Shape: ``(*data.shape, num_dof_vel)``.
 
@@ -127,10 +127,10 @@ def get_end_effector_jac(self, data: SceneData) -> numpy.typing.NDArray[numpy.fl
 ```
 
 Get the Jacobian matrix of the end effector.
-        
+
         Args:
             data: The scene data containing the current state.
-        
+
         Returns:
             ndarray: The Jacobian matrix of the end effector. Shape: ``(*data.shape, 6,
         num_dof_vel)``.         The first 3 rows are angular velocity, the last 3 rows are
@@ -143,10 +143,10 @@ def get_end_effector_pose(self, data: SceneData) -> numpy.typing.NDArray[numpy.f
 ```
 
 Get the end effector pose in world coordinates.
-        
+
         Args:
             data: The scene data containing the current state.
-        
+
         Returns:
             ndarray: The end effector pose array. Shape: ``(*data.shape, 7)``. Each pose is a
         7-element         array with `[x, y, z, i, j, k, w]` format.
@@ -158,10 +158,10 @@ def get_end_effector_vel(self, data: SceneData) -> numpy.typing.NDArray[numpy.fl
 ```
 
 Get the end effector velocity in world coordinates.
-        
+
         Args:
             data: The scene data containing the current state.
-        
+
         Returns:
             ndarray: The end effector velocity array. Shape: ``(*data.shape, 6)``. Each velocity is
         a 6-element array with first 3 elements representing angular velocity and last 3
@@ -174,12 +174,12 @@ def get_end_point_jac(self, data: SceneData, end_point: Any) -> numpy.typing.NDA
 ```
 
 Get the Jacobian matrix of a specific point fixed to the end link.
-        
+
         Args:
             data: The scene data containing the current state.
             end_point: A 3-element array representing the point in the end link's local
         frame.
-        
+
         Returns:
             ndarray: The Jacobian matrix of the specified point. Shape: ``(*data.shape, 6,
         num_dof_vel)``.         The first 3 rows are angular velocity, the last 3 rows are
@@ -192,10 +192,10 @@ def get_inertia_matrix(self, data: SceneData) -> numpy.typing.NDArray[numpy.floa
 ```
 
 Get the joint space inertia matrix of the chain.
-        
+
         Args:
             data: The scene data containing the current state.
-        
+
         Returns:
             ndarray: The joint space inertia matrix of the chain. Shape: ``(*data.shape,
         chain.num_dof_vel, chain.num_dof_vel)``.
@@ -207,12 +207,12 @@ def get_link(self, index: int) -> Link
 ```
 
 Get the link at the specified index in the IK chain.
-        
+
         Args:
             index: The index of the link in the chain (0-based).
-        
+
         Returns:
             Link: The link object at the specified index.
-        
+
         Raises:
             IndexError: If the index is out of bounds.

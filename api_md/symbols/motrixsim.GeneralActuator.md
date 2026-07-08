@@ -3,9 +3,9 @@
 Module: [`motrixsim`](../modules/motrixsim.md)
 
 General actuator (MJCF ``<general>``).
-    
+
     MJCF parameter mapping (assumes ``gaintype="fixed"`` and ``biastype="affine"``):
-    
+
     - ``gainprm[0]`` -> gain
     - ``biasprm[0]`` -> bias
     - ``-biasprm[1]`` -> stiffness (sign is negated because the force equation subtracts stiffness *
@@ -33,10 +33,10 @@ def get_bias_override(self, data: SceneData) -> numpy.typing.NDArray[numpy.float
 ```
 
 Get the bias override value from the scene data.
-        
+
         Args:
             data: The scene data to query.
-        
+
         Returns:
             NDArray[float]: The bias value. Shape: ``(*data.shape,)``
 
@@ -47,10 +47,10 @@ def get_damping_override(self, data: SceneData) -> numpy.typing.NDArray[numpy.fl
 ```
 
 Get the damping override value from the scene data.
-        
+
         Args:
             data: The scene data to query.
-        
+
         Returns:
             NDArray[float]: The damping value. Shape: ``(*data.shape,)``
 
@@ -61,10 +61,10 @@ def get_gain_override(self, data: SceneData) -> numpy.typing.NDArray[numpy.float
 ```
 
 Get the gain override value from the scene data.
-        
+
         Args:
             data: The scene data to query.
-        
+
         Returns:
             NDArray[float]: The gain value. Shape: ``(*data.shape,)``
 
@@ -75,10 +75,10 @@ def get_stiffness_override(self, data: SceneData) -> numpy.typing.NDArray[numpy.
 ```
 
 Get the stiffness override value from the scene data.
-        
+
         Args:
             data: The scene data to query.
-        
+
         Returns:
             NDArray[float]: The stiffness value. Shape: ``(*data.shape,)``
 
@@ -89,15 +89,15 @@ def set_bias_override(self, data: SceneData, bias: numpy.typing.NDArray[numpy.fl
 ```
 
 Override the bias value of the actuator.
-        
+
         Args:
             data: The scene data to modify.
             bias: The new bias value.
                 - Shape (): Single value applied to all batches
                 - Shape: ``(*data.shape,)``: Per-batch values
-        
+
         Note:
-            If the bias is NaN or infinite, the override will be ignored.
+            Raises ValueError if the bias is NaN or infinite.
 
 ### set_damping_override
 
@@ -106,15 +106,15 @@ def set_damping_override(self, data: SceneData, damping: numpy.typing.NDArray[nu
 ```
 
 Override the damping value of the actuator.
-        
+
         Args:
             data: The scene data to modify.
             damping: The new damping value.
                 - Shape (): Single value applied to all batches
                 - Shape: ``(*data.shape,)``: Per-batch values
-        
+
         Note:
-            If the damping is negative, NaN, or infinite, the override will be ignored.
+            Raises ValueError if the damping is negative, NaN, or infinite.
 
 ### set_gain_override
 
@@ -123,15 +123,15 @@ def set_gain_override(self, data: SceneData, gain: numpy.typing.NDArray[numpy.fl
 ```
 
 Override the gain value of the actuator.
-        
+
         Args:
             data: The scene data to modify.
             gain: The new gain value.
                 - Shape (): Single value applied to all batches
                 - Shape: ``(*data.shape,)``: Per-batch values
-        
+
         Note:
-            If the gain is NaN or infinite, the override will be ignored.
+            Raises ValueError if the gain is NaN or infinite.
 
 ### set_stiffness_override
 
@@ -140,12 +140,12 @@ def set_stiffness_override(self, data: SceneData, stiffness: numpy.typing.NDArra
 ```
 
 Override the stiffness value of the actuator.
-        
+
         Args:
             data: The scene data to modify.
             stiffness: The new stiffness value.
                 - Shape (): Single value applied to all batches
                 - Shape: ``(*data.shape,)``: Per-batch values
-        
+
         Note:
-            If the stiffness is negative, NaN, or infinite, the override will be ignored.
+            Raises ValueError if the stiffness is negative, NaN, or infinite.

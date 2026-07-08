@@ -3,7 +3,7 @@
 Module: [`motrixsim`](../modules/motrixsim.md)
 
 The Joint object represents a joint in the scene.
-    
+
     This class provides access to the properties and state of a joint in the scene.
     It allows you to retrieve information about the joint's name, link index, number of DoF
     velocities and positions, and DoF velocity and position addresses.
@@ -41,10 +41,10 @@ axis: numpy.typing.NDArray[numpy.float32]
 ```
 
 NDArray[float]: The motion axis of the joint.
-    
+
     Returns a 3-element array representing the motion axis of the joint in the
     successor body coordinate frame. This is primarily used for hinge and slide joints.
-    
+
     Note:
         The axis is normalized automatically when the joint is created.
         For spherical joints, the axis concept doesn't apply in the same way
@@ -57,7 +57,7 @@ dof_pos_index: int
 ```
 
 The position DoF address of the joint.
-    
+
     Return the starting index of the position DoFs.
 
 ### dof_vel_index
@@ -67,7 +67,7 @@ dof_vel_index: int
 ```
 
 The velocity DoF address of the joint.
-    
+
     Return the starting index of the velocity DoFs.
 
 ### frictionloss
@@ -117,7 +117,7 @@ name: Optional[str]
 ```
 
 The name of the joint.
-    
+
     Return the name of the joint, or `None` if not set.
 
 ### num_dof_pos
@@ -143,15 +143,15 @@ range: numpy.typing.NDArray[numpy.float32]
 ```
 
 NDArray[float]: The range limits of the joint.
-    
+
     Returns a 2-element array containing the lower and upper bounds of the joint range.
     Array format: [lower_bound, upper_bound]
     If the joint has no limits, returns [f32::NEG_INFINITY, f32::INFINITY].
-    
+
     Example:
-    
+
     .. code:: python
-    
+
         joint.range
         # array([[-1.57,  1.57]])  # Hinge joint with ±π/2 limits
 
@@ -175,10 +175,10 @@ def get_armature_override(self, data: SceneData) -> numpy.typing.NDArray[numpy.f
 ```
 
 Get the armature override value from the scene data.
-        
+
         Args:
             data: The scene data to query.
-        
+
         Returns:
             NDArray[float]: The armature override value. Shape: ``(*data.shape,)``
 
@@ -189,10 +189,10 @@ def get_dof_pos(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
 ```
 
 Get the DoF positions of the joint.
-        
+
         Args:
             data: The scene data to query.
-        
+
         Returns:
             NDArray[float]: The DoF positions. shape = (data.shape, `num_dof_pos`)
 
@@ -203,10 +203,10 @@ def get_dof_vel(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
 ```
 
 Get the DoF velocities of the joint.
-        
+
         Args:
             data: The scene data to query.
-        
+
         Returns:
             NDArray[float]: The DoF velocities. shape = (data.shape, `num_dof_vel`)
 
@@ -217,10 +217,10 @@ def get_frictionloss_override(self, data: SceneData) -> numpy.typing.NDArray[num
 ```
 
 Get the friction loss override value from the scene data.
-        
+
         Args:
             data: The scene data to query.
-        
+
         Returns:
             NDArray[float]: The friction loss override value. Shape: ``(*data.shape,)``
 
@@ -231,13 +231,13 @@ def set_armature_override(self, data: SceneData, armature: numpy.typing.NDArray[
 ```
 
 Override the armature value of the joint.
-        
+
         Args:
             data: The scene data to modify.
             armature: The new armature value.
                 - Shape (): Single value applied to all batches
                 - Shape: ``(*data.shape,)``: Per-batch values
-        
+
         Note:
             If the armature is negative, NaN, or infinite, the override will be ignored.
 
@@ -248,7 +248,7 @@ def set_dof_pos(self, data: SceneData, position: Any) -> None
 ```
 
 Set the DoF positions of the joint.
-        
+
         Args:
             data: The scene data to store the new positions.
             position: The new DoF positions. shape = (data.shape,
@@ -261,7 +261,7 @@ def set_dof_vel(self, data: SceneData, velocity: Any) -> None
 ```
 
 Set the DoF velocities of the joint.
-        
+
         Args:
             data: The scene data to store the new velocities.
             velocity: The new DoF velocities. shape = (data.shape,
@@ -274,12 +274,12 @@ def set_frictionloss_override(self, data: SceneData, frictionloss: numpy.typing.
 ```
 
 Override the friction loss value of the joint.
-        
+
         Args:
             data: The scene data to modify.
             frictionloss: The new friction loss value.
                 - Shape (): Single value applied to all batches
                 - Shape: ``(*data.shape,)``: Per-batch values
-        
+
         Note:
             If the value is negative, NaN, or infinite, the override will be ignored.

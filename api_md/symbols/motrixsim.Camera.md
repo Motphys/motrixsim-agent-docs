@@ -60,7 +60,7 @@ link: Optional[Link]
 ```
 
 Get the link that this camera is attached to.
-    
+
     Note:
         Returns `None` if the camera is not attached to any link (i.e., it's a
         world space camera).
@@ -96,9 +96,9 @@ position_track: str
 ```
 
 Get or set the position track mode of the camera.
-    
+
     Possible values are:
-    
+
     - "free": Free to move in all directions.
     - "fixed_local": Fixed the relative position to parent in local frame.
     - "fixed_world": Fixed the relative position to parent in world frame.
@@ -118,9 +118,9 @@ rotation_track: str
 ```
 
 Get or set the rotation track mode of the camera.
-    
+
     Possible values are:
-    
+
     - "free": Free to rotate.
     - "fixed_local": Fixed the relative rotation to parent in local frame.
     - "fixed_world": Fixed the relative rotation to parent in world frame.
@@ -134,7 +134,7 @@ track_target_link: Optional[Link]
 ```
 
 Get or set the link that the camera looks at.
-    
+
     Note:
         This attribute is only valid when the rotation track mode is "look_at_link".
 
@@ -153,10 +153,10 @@ def get_pose(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
 ```
 
 Get the world pose of the camera.
-        
+
         Args:
            data: The scene data to query.
-        
+
         Returns:
             NDArray[float]: Shape: ``(*data.shape, 7)``. Each pose is represented as a 7 elements
                 array with `[x, y, z, qx, qy, qz,qw]` format.
@@ -168,7 +168,7 @@ def set_near_far(self, near: float, far: float) -> None
 ```
 
 Set the near and far plane of the camera.
-        
+
         Args:
            near: The near plane distance. Must be positive.
            far: The far plane distance. Must be larger than near.
@@ -180,15 +180,15 @@ def set_render_target(self, target: str, w: int = 400, h: int = 300) -> None
 ```
 
 Set the render target of the camera.
-        
+
         Args:
            target: The render target, either "window" or "image".
-        
+
            w: The width of the image if the target is "image". ignored if the target is
            "window".   
-        
+
            h: The height of the image if the target is "image". ignored if the target is
            "window".
-        
+
         Note:
            This method must be called before you launch the render application.

@@ -2,15 +2,11 @@
 
 Module: [`motrixsim`](../modules/motrixsim.md)
 
-The shape type of a collider.
-    
-    Enum Values:
-        Sphere: A spherical collision shape
-        Cylinder: A cylindrical collision shape
-        Capsule: A capsule collision shape (cylinder with hemispherical ends)
-        Cuboid: A box-shaped collision shape
-        InfinitePlane: An infinite plane collision shape
-        HField: A height field collision shape for terrain
+The source shape type of a high-level geometry.
+
+    This mirrors Rust's `msd::geom::ShapeType` / `GeometryShape` and describes the user-facing
+    geometry before compile-time lowering. A mesh high-level shape may lower to one or more
+    low-level runtime collider shapes.
 
 ## Properties
 
@@ -20,10 +16,10 @@ The shape type of a collider.
 | `Cuboid` | `Any` | Cuboid shape. |
 | `Cylinder` | `Any` | Cylinder shape. |
 | `Ellipsoid` | `Any` | Ellipsoid shape. |
-| `HField` | `Any` | HField shape. |
-| `InfinitePlane` | `Any` | InfinitePlane shape. |
-| `Mesh` | `Any` | Mesh shape |
-| `Plane` | `Any` | Sized Plane |
+| `HField` | `Any` | Height field shape. |
+| `InfinitePlane` | `Any` | Infinite plane shape. |
+| `Mesh` | `Any` | Source mesh shape. |
+| `Plane` | `Any` | Sized plane shape. |
 | `Sphere` | `Any` | Sphere shape. |
 
 ### Capsule
@@ -64,7 +60,7 @@ Ellipsoid shape.
 HField: Any
 ```
 
-HField shape.
+Height field shape.
 
 ### InfinitePlane
 
@@ -72,7 +68,7 @@ HField shape.
 InfinitePlane: Any
 ```
 
-InfinitePlane shape.
+Infinite plane shape.
 
 ### Mesh
 
@@ -80,7 +76,7 @@ InfinitePlane shape.
 Mesh: Any
 ```
 
-Mesh shape
+Source mesh shape.
 
 ### Plane
 
@@ -88,7 +84,7 @@ Mesh shape
 Plane: Any
 ```
 
-Sized Plane
+Sized plane shape.
 
 ### Sphere
 
@@ -102,8 +98,8 @@ Sphere shape.
 
 | Name | Signature | Description |
 |------|-----------|-------------|
-| `type_names` | `() -> list[str]` | Returns all shape type names as a list of strings. |
-| `types` | `() -> list[Shape]` | Returns all shape types as a list. |
+| `type_names` | `() -> list[str]` | Returns all high-level source shape type names as a list of strings. |
+| `types` | `() -> list[Shape]` | Returns all high-level source shape types as a list. |
 
 ### type_names
 
@@ -111,10 +107,10 @@ Sphere shape.
 def type_names() -> list[str]
 ```
 
-Returns all shape type names as a list of strings.
-        
+Returns all high-level source shape type names as a list of strings.
+
         Returns:
-            List[str]: All shape type names.
+            List[str]: All high-level source shape type names.
 
 ### types
 
@@ -122,7 +118,7 @@ Returns all shape type names as a list of strings.
 def types() -> list[Shape]
 ```
 
-Returns all shape types as a list.
-        
+Returns all high-level source shape types as a list.
+
         Returns:
-            List[Shape]: All shape types.
+            List[Shape]: All high-level source shape types.

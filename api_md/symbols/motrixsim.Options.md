@@ -3,7 +3,7 @@
 Module: [`motrixsim`](../modules/motrixsim.md)
 
 The Options object represents the simulation options.
-    
+
     This class is used to configure the simulation options. You can access it through
     `model.options`.
 
@@ -26,12 +26,12 @@ _convex_strategy: str
 ```
 
 The convex hull generation strategy.
-    
-    Returns "QuickConvex" or "QHull".
-    
+
+    Returns "quick_convex" or "q_hull".
+
     Note:
-        - QuickConvex: Fast approximation algorithm (default)
-        - QHull: Exact algorithm (only available if compiled with qhull feature)
+        - quick_convex: Fast approximation algorithm (default)
+        - q_hull: Exact algorithm (only available if compiled with qhull feature)
 
 ### disable_contacts
 
@@ -56,7 +56,7 @@ gravity: numpy.typing.NDArray[numpy.float32]
 ```
 
 NDArray[float]: The gravity vector applied to the simulation.
-    
+
     A numpy array of shape (3,) or a list of three floats representing the  gravity vector.
 
 ### max_iterations
@@ -66,7 +66,7 @@ max_iterations: int
 ```
 
 The maximum number of iterations for the solver.
-    
+
     Raises:
         `ValueError`: The set max iterations is zero.
 
@@ -77,7 +77,7 @@ solver_tolerance: float
 ```
 
 The tolerance for the solver.
-    
+
     Raises:
         `ValueError`: The set tolerance is not positive.
 
@@ -88,7 +88,7 @@ timestep: float
 ```
 
 The delta time for each simulation step.
-    
+
     Raises:
         `ValueError`: The set timestep is not positive.
 

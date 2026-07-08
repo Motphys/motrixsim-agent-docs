@@ -26,7 +26,7 @@ def draw_arrow(self, start: Any, end: Any, color: Color = ...) -> None
 ```
 
 Draw a arrow.
-        
+
         Args:
             start: The start point of the arrow in 3D space.
             end: The end point of the arrow.
@@ -39,7 +39,7 @@ def draw_axes(self, pos: Optional[Any] = None, rot: Optional[Any] = None, length
 ```
 
 Draw the XYZ axes at the given position and rotation.
-        
+
         Args:
             pos: the position of axes with (x,y,z) format.
             rot: the rotation of axes as a quaternion (x, y, z,
@@ -53,7 +53,7 @@ def draw_capsule(self, half_height: float, radius: float, pos: Any, rot: Any, co
 ```
 
 Draw a capsule.
-        
+
         Args:
             half_height: The half height of the capsule.
             radius: The radius of the capsule.
@@ -68,7 +68,7 @@ def draw_cuboid(self, size: Any, pos: Any, rot: Any, color: Color = ...) -> None
 ```
 
 Draw a cuboid.
-        
+
         Args:
             size: Size of the cuboid in 3D space.
             pos: Position of the cuboid in 3D space.
@@ -82,7 +82,7 @@ def draw_cylinder(self, half_height: float, radius: float, pos: Any, rot: Any, c
 ```
 
 Draw a cylinder.
-        
+
         Args:
             half_height: The half height of the cylinder.
             radius: The radius of the cylinder.
@@ -97,7 +97,7 @@ def draw_grid(self, pos: Any, rot: Any, x_count: int = 2, y_count: int = 2, z_co
 ```
 
 Draw a rectangle.
-        
+
         Args:
             pos: Position of the rectangle in 3D space.
             rot: Rotation of the rectangle as a quaternion (x, y, z, w).
@@ -114,7 +114,7 @@ def draw_line(self, start: Any, end: Any, color: Color = ...) -> None
 ```
 
 Draw a line.
-        
+
         Args:
             start: The start point of the line in 3D space.
             end: The end point of the line.
@@ -127,7 +127,7 @@ def draw_ray(self, start: Any, vector: Any, color: Color = ...) -> None
 ```
 
 Draw a ray.
-        
+
         Args:
             start: The start point of the ray in 3D space.
             vector: The direction of the ray.
@@ -140,7 +140,7 @@ def draw_rect(self, width: float, height: float, pos: Any, rot: Any, color: Colo
 ```
 
 Draw a rectangle.
-        
+
         Args:
             width: The width of the rectangle.
             height: The height of the rectangle.
@@ -155,7 +155,7 @@ def draw_sphere(self, radius: float, pos: Any, color: Color = ...) -> None
 ```
 
 Draw a sphere at the given position with the specified radius and color.
-        
+
         Args:
             radius: The radius of the sphere.
             pos: The position of the sphere in 3D space.

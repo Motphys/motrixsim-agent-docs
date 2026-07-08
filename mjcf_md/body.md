@@ -3,7 +3,7 @@
 **Path**: `body`
 **Tag**: `body`
 **Parent**: `mujoco`
-**Children**: `body/inertial`, `body/joint`, `body/freejoint`, `body`, `body/attach`, `body/camera`, `body/frame`, `body/geom`, `body/light`, `body/replicate`, `body/site`
+**Children**: `body/inertial`, `body/joint`, `body/freejoint`, `body`, `body/attach`, `body/camera`, `body/frame`, `body/geom`, `body/gsplat`, `body/light`, `body/replicate`, `body/site`
 **Rust Type**: `model::body::Body`
 
 This element is used to construct the kinematic tree via nesting. The element worldbody is used
@@ -203,11 +203,11 @@ Note
 | `xyaxes` | `real(6)` | no | — | Orientation of the camera frame via X and Y axes. Semantically convenient for cameras:  X and Y correspond to \"right\" and \"up\" in pixel space, respectively.  → See [rotation representation](#rotation-attrs-xyaxes). |
 | `zaxis` | `real(3)` | no | — | Orientation of the camera frame via Z axis direction.  → See [rotation representation](#rotation-attrs-zaxis). |
 | `resolution` | `real(2)` | yes | `"1 1"` |  |
-| `trackposspeed` | `real` | yes | `0.0` | Motphys-only extension. When not zero, the camera will move to target pose with this speed. |
-| `trackrotspeed` | `real` | yes | `0.0` | Motphys-only extension. When not zero, the camera will rotate to target pose with this  speed. |
-| `depth` | `bool` | yes | `false` | Motphys-only extension. When enabled, the camera renders depth information only. |
-| `znear` | `real` | yes | `0.0` | Motphys-only extension. The near clipping plane distance. If not specified, it will be  automatically computed. |
-| `zfar` | `real` | yes | `0.0` | Motphys-only extension. The far clipping plane distance. If not specified, it will be  automatically computed. |
+| `trackposspeed` | `real` | yes | `0.0` | [MPEX] Motphys-only extension. When not zero, the camera will move to target pose with this speed. |
+| `trackrotspeed` | `real` | yes | `0.0` | [MPEX] Motphys-only extension. When not zero, the camera will rotate to target pose with this  speed. |
+| `depth` | `bool` | yes | `false` | [MPEX] Motphys-only extension. When enabled, the camera renders depth information only. |
+| `znear` | `real` | yes | `0.0` | [MPEX] Motphys-only extension. The near clipping plane distance. If not specified, it will be  automatically computed. |
+| `zfar` | `real` | yes | `0.0` | [MPEX] Motphys-only extension. The far clipping plane distance. If not specified, it will be  automatically computed. |
 
 ## body/frame
 
@@ -300,6 +300,33 @@ Note
 | `solimp` | `real(5)` | yes | `"0.9 0.95 0.001 0.5 2.0"` | Solver impedance parameters for contact simulation.  → See [solver parameters](#solver-attrs-solimp). |
 | `hfield` | `string` | no | — | This attribute must be specified if and only if the geom type is \"hfield\". It references  the height field asset to be instantiated at the position and orientation of the geom  frame. |
 
+## body/gsplat [PRO]
+
+**Path**: `body/gsplat`
+**Tag**: `gsplat`
+**Parent**: `body`
+**Children**: none
+**Rust Type**: `model::body::gsplat::GaussianSplat`
+
+A Gaussian cloud instance attached to the world or a body.
+
+### Attributes
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `name` | `string` | no | — | [PRO] Optional instance name. |
+| `asset` | `string` | yes | `""""` | [PRO] Gaussian cloud asset name. |
+| `pos` | `real(3)` | yes | `"0.0 0.0 0.0"` | [PRO] Position of the Gaussian cloud frame. |
+| `quat` | `real(4)` | no | — | [PRO] Orientation of the Gaussian cloud frame as unit quaternion. |
+| `euler` | `real(3)` | no | — | [PRO] Orientation of the Gaussian cloud frame as Euler angles. |
+| `axisangle` | `real(4)` | no | — | [PRO] Orientation of the Gaussian cloud frame as an axis-angle pair. |
+| `xyaxes` | `real(6)` | no | — | [PRO] Orientation of the Gaussian cloud frame via X and Y axes. |
+| `zaxis` | `real(3)` | no | — | [PRO] Orientation of the Gaussian cloud frame via Z axis direction. |
+| `scale` | `real(3)` | yes | `"1.0 1.0 1.0"` | [PRO] Per-axis instance scale. |
+| `opacity` | `real` | yes | `1.0` | [PRO] Opacity multiplier. |
+| `splatscale` | `real` | yes | `1.0` | [PRO] Gaussian covariance scale multiplier. |
+| `group` | `int` | yes | `0` | [PRO] Visibility group. |
+
 ## body/light
 
 **Path**: `body/light`
@@ -329,7 +356,7 @@ Note
 | `class` | `string` | no | — | Defaults class for setting unspecified attributes. |
 | `mode` | `string` | yes | `"fixed"` | This attribute specifies how the light position and orientation in world coordinates are  computed in forward kinematics, which in turn determines what the light illuminates.  \"fixed\" means that the position and orientation specified below are fixed relative to the  body where the light is defined. \"track\" means that the light position is at a constant  offset from the body in world coordinates, while the orientation is constant in world  coordinates. \"trackcom\" is similar to \"track\" but the constant spatial offset is defined  relative to the center of mass of the kinematic subtree starting at the body in which the  light is defined. \"targetbody\" means that the light position is fixed in the body frame,  while the orientation is adjusted so that it always points towards the targeted body  specified with the target attribute. \"targetbodycom\" is the same as \"targetbody\" but the  light is oriented towards the center of mass of the subtree starting at the target body. Choice: `fixed`, `track`, `trackcom`, `targetbody`, `targetbodycom`. |
 | `target` | `string` | no | — | This attribute specifies which body should be targeted in \"targetbody\" and \"targetbodycom\"  modes. In all other modes this attribute is ignored. |
-| `type` | `string` | yes | `"spot"` | Determines the type of light. Note that some light types may not be supported by some  renderers (e.g. only spot and directional lights are supported by the default native  renderer). Choice: `spot`, `point`, `directional`. |
+| `type` | `string` | yes | `"spot"` | Determines the type of light. The built-in renderer supports spot, point and directional  lights. Choice: `spot`, `point`, `directional`. |
 | `directional` | `bool` | yes | `false` | This is a deprecated legacy attribute. Please use the type attribute instead. If set to  \"true\", and no type is specified, this will change the light type to be directional. |
 | `castshadow` | `bool` | yes | `true` | If this attribute is \"true\" the light will cast shadows. More precisely, the geoms  illuminated by the light will cast shadows, however this is a property of lights rather  than geoms. Since each shadow-casting light causes one extra rendering pass through all  geoms, this attribute should be used with caution. Higher quality shadows are achieved by  increasing the value of the shadowsize attribute of quality, as well as positioning  spotlights closer to the surface on which shadows appear, and limiting the volume in which  shadows are cast. For spotlights this volume is a cone, whose angle is the cutoff attribute  multiplied by the shadowscale attribute of map. For directional lights this volume is a  box, whose half-sizes in the directions orthogonal to the light are the model extent  multiplied by the shadowclip attribute of map. Internally the shadow-mapping mechanism  renders the scene from the light viewpoint into a depth texture, and then renders again  from the camera viewpoint, using the depth texture to create shadows. |
 | `dir` | `real(3)` | yes | `"0.0 0.0 -1.0"` | Direction of the light. |

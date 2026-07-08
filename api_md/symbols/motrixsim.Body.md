@@ -3,7 +3,7 @@
 Module: [`motrixsim`](../modules/motrixsim.md)
 
 The Body object represents a rigid body in the scene.
-    
+
     This class provides access to the properties and state of a rigid body in the simulation.
     It allows you to retrieve information about the body's name, floating base, pose, and DoF
     positions and velocities.
@@ -17,6 +17,8 @@ The Body object represents a rigid body in the scene.
 | `floatingbase` | `Optional[FloatingBase]` | The floating base object. |
 | `index` | `int` |  |
 | `is_mocap` | `bool` | Whether the body is a mocap (kinematic) body. |
+| `joints` | `list[Joint]` | List[Joint]: The joints that belong to this body. |
+| `links` | `list[Link]` | List[Link]: The links that belong to this body. |
 | `mocap` | `Optional[Mocap]` | Convert this body to a mocap object if it is a mocap body. |
 | `model` | `SceneModel` |  |
 | `name` | `Optional[str]` | The name of the body. |
@@ -33,9 +35,9 @@ actuators: list[Actuator]
 ```
 
 List[Actuator]: The list of actuators associated with this body.
-    
+
     Returns an empty list if the body has no actuators.
-    
+
     Note:
         Actuators are associated with a body through the joints on the body.
         Each actuator targets a specific joint, and this method returns all
@@ -56,9 +58,9 @@ floatingbase: Optional[FloatingBase]
 ```
 
 The floating base object.
-    
+
     Return `None` if not present.
-    
+
     Note:
       In mjcf, a body is free moving if it has `<freejoint>`
 
@@ -75,8 +77,26 @@ is_mocap: bool
 ```
 
 Whether the body is a mocap (kinematic) body.
-    
+
     Return True if the body has no joints and fixed to the world, `False` otherwise.
+
+### joints
+
+```python
+joints: list[Joint]
+```
+
+List[Joint]: The joints that belong to this body.
+    Note:
+        The `<freejoint>` is not counted as a joint in motrixsim but a floating base.
+
+### links
+
+```python
+links: list[Link]
+```
+
+List[Link]: The links that belong to this body.
 
 ### mocap
 
@@ -85,7 +105,7 @@ mocap: Optional[Mocap]
 ```
 
 Convert this body to a mocap object if it is a mocap body.
-    
+
     Returns:
         Optional[PyMocap]: The mocap object if this body is a mocap, `None` otherwise.
 
@@ -102,7 +122,7 @@ name: Optional[str]
 ```
 
 The name of the body.
-    
+
     Return `None` if not present.
 
 ### num_actuators
@@ -120,7 +140,7 @@ num_joint_dof_pos: int
 ```
 
 The number of DoF positions of all joints on the body.
-    
+
     Note:
        If the body has floating base, the floating base DoF positions are NOT included
 
@@ -131,7 +151,7 @@ num_joint_dof_vel: int
 ```
 
 The number of DoF velocities of all joints on the body.
-    
+
     Note:
         If the body has floating base, the floating base DoF velocities are NOT included
 
@@ -142,7 +162,7 @@ num_joints: int
 ```
 
 The number of joints that belong to this body.
-    
+
     Note:
         The `<freejoint>` is not counted as a joint in motrixsim but a floating base.
 
@@ -160,8 +180,11 @@ The number of links that belong to this body.
 |------|-----------|-------------|
 | `get_dof_pos_indices` | `(self, include_floatingbase: bool = True) -> numpy.typing.NDArray[numpy.uint32]` | Get the indices of the DoF positions of the body. |
 | `get_dof_vel_indices` | `(self, include_floatingbase: bool = True) -> numpy.typing.NDArray[numpy.uint32]` | Get the indices of the DoF velocities of the body. |
+| `get_geom` | `(self, arg: Any) -> Optional[Geom]` | Get a geom that belongs to this body by name or body-local index. |
+| `get_joint` | `(self, arg: Any) -> Optional[Joint]` | Get a joint that belongs to this body by name or body-local index. |
 | `get_joint_dof_pos` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the DoF positions of all joints on the body. |
 | `get_joint_dof_vel` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the DoF velocities of all joints on the body. |
+| `get_link` | `(self, arg: Any) -> Optional[Link]` | Get a link that belongs to this body by name or body-local index. |
 | `get_pose` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the world pose of the body. |
 | `get_position` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the world position of the body. |
 | `get_rotation` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the world rotation of the body as a quaternion. |
@@ -177,7 +200,7 @@ def get_dof_pos_indices(self, include_floatingbase: bool = True) -> numpy.typing
 ```
 
 Get the indices of the DoF positions of the body.
-        
+
         Args:
             include_floatingbase: Whether to include the floating base DoF positions
                 indices. If `False`, only the joint DoF positions indices are returned.
@@ -192,13 +215,49 @@ def get_dof_vel_indices(self, include_floatingbase: bool = True) -> numpy.typing
 ```
 
 Get the indices of the DoF velocities of the body.
-        
+
         Args:
             include_floatingbase: Whether to include the floating base DoF velocities
                 indices. If `False`, only the joint DoF velocities indices are returned.
         Returns:
            NDArray[int]: The DoF velocity indices. if include_floatingbase is true, shape =
                 (`num_joint_dof_vel` + 6,), else shape = (`num_joint_dof_vel`,).
+
+### get_geom
+
+```python
+def get_geom(self, arg: Any) -> Optional[Geom]
+```
+
+Get a geom that belongs to this body by name or body-local index.
+
+        Args:
+            key: Name or body-local index of the geom.
+
+        Returns:
+            Optional[Geom]: The geom object, or `None` if not found.
+
+        Note:
+            Integer keys are local to this body and follow the body's link traversal order.
+            The returned `Geom.index` is still the global index in `SceneModel.geoms`.
+
+### get_joint
+
+```python
+def get_joint(self, arg: Any) -> Optional[Joint]
+```
+
+Get a joint that belongs to this body by name or body-local index.
+
+        Args:
+            key: Name or body-local index of the joint.
+
+        Returns:
+            Optional[Joint]: The joint object, or `None` if not found.
+
+        Note:
+            Integer keys are local to this body. `body.get_joint(0)` returns `body.joints[0]`.
+            The returned `Joint.index` is still the global index in `SceneModel.joints`.
 
 ### get_joint_dof_pos
 
@@ -207,13 +266,13 @@ def get_joint_dof_pos(self, data: SceneData) -> numpy.typing.NDArray[numpy.float
 ```
 
 Get the DoF positions of all joints on the body.
-        
+
         Args:
             data: The scene data to query.
-        
+
         Returns:
             NDArray[float]: The DoF positions. shape = (`*data.shape`, `num_joint_dof_pos`).
-        
+
         Note:
             If the body has floating base, the floating base DoF positions are NOT included.
 
@@ -224,16 +283,34 @@ def get_joint_dof_vel(self, data: SceneData) -> numpy.typing.NDArray[numpy.float
 ```
 
 Get the DoF velocities of all joints on the body.
-        
+
         Args:
             data: The scene data to query.
-        
+
         Returns:
             NDArray[float]: The DoF velocities. shape = (`*data.shape`,:meth:
                 `body.num_joint_dof_vel`).
-        
+
         Note:
             If the body has floating base, the floating base DoF velocities are NOT included.
+
+### get_link
+
+```python
+def get_link(self, arg: Any) -> Optional[Link]
+```
+
+Get a link that belongs to this body by name or body-local index.
+
+        Args:
+            key: Name or body-local index of the link.
+
+        Returns:
+            Optional[Link]: The link object, or `None` if not found.
+
+        Note:
+            Integer keys are local to this body. `body.get_link(0)` returns `body.base_link`.
+            The returned `Link.index` is still the global index in `SceneModel.links`.
 
 ### get_pose
 
@@ -242,10 +319,10 @@ def get_pose(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
 ```
 
 Get the world pose of the body.
-        
+
         Args:
             data: The scene data to query.
-        
+
         Returns:
             NDArray[float]: Shape: ``(*data.shape, 7)``.  Each pose is a 7-element array with `[x,
         y,     z, i, j, k, w]`.
@@ -257,10 +334,10 @@ def get_position(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
 ```
 
 Get the world position of the body.
-        
+
         Args:
             data: The scene data to query.
-        
+
         Returns:
             NDArray[float]: Shape: ``(*data.shape, 3)``.
 
@@ -271,10 +348,10 @@ def get_rotation(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
 ```
 
 Get the world rotation of the body as a quaternion.
-        
+
         Args:
             data: The scene data to query.
-        
+
         Returns:
             NDArray[float]: Shape: ``(*data.shape, 4)``. Each rotation is a 4-element array with
         `[i,     j, k, w]`.
@@ -286,10 +363,10 @@ def get_rotation_mat(self, data: SceneData) -> numpy.typing.NDArray[numpy.float3
 ```
 
 Get the world rotation of the body as a rotation matrix.
-        
+
         Args:
             data: The scene data to query.
-        
+
         Returns:
             NDArray[float]: Shape: ``(*data.shape, 3, 3)``.
 
@@ -300,20 +377,20 @@ def set_actuator_ctrls(self, data: SceneData, ctrls: Any) -> None
 ```
 
 Set the control values for all actuators on this body.
-        
+
         Args:
             data: The scene data to modify.
             ctrls: The control values to set. Shape = `(len(body.actuators),)`.
                 If the data has batch dimension, `ctrls` must have the same shape as the data.
-        
+
         Note:
             The number of control values must match the number of actuators on the body.
             Use `body.actuators` to get the list of actuators and their count.
-        
+
         Example:
-        
+
         .. code:: python
-        
+
             # For a body with 3 actuators:
             body.set_actuator_ctrls(data, [1.0, 0.5, -0.3])  # Set controls for all 3 actuators
 
@@ -324,7 +401,7 @@ def set_dof_pos(self, data: SceneData, dof_pos: Any, include_floatingbase: bool 
 ```
 
 Set the DoF positions of the body.
-        
+
         Args:
             data: The scene data to modify.
             dof_pos: The DoF positions to set. Shape = `(num_joint_dof_pos + 7,)`
@@ -340,7 +417,7 @@ def set_dof_vel(self, data: SceneData, dof_vel: Any, include_floatingbase: bool 
 ```
 
 Set the DoF velocities of the body.
-        
+
         Args:
             data: The scene data to modify.
             dof_vel: The DoF velocities to set. Shape = (`num_joint_dof_vel`

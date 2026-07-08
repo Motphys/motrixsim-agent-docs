@@ -3,7 +3,7 @@
 Module: [`motrixsim`](../modules/motrixsim.md)
 
 The FloatingBase object represents a floating base in the scene.
-    
+
     This class provides access to the properties and state of a floating base in the scene.
     It allows you to retrieve information about the base's name, DoF velocities and positions,
     and to set its world translation and rotation.
@@ -77,7 +77,7 @@ name: Optional[str]
 ```
 
 The name of the floating base.
-    
+
     Return `None` if not set.
 
 ## Methods
@@ -104,10 +104,10 @@ def get_dof_pos(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
 ```
 
 Get the DoF positions of the floating base.
-        
+
         Args:
             data: The scene data to query.
-        
+
         Returns:
             NDArray[float]: The DoF positions with (x,y,z, i,j,k,w) format. shape = (data.shape, 7).
 
@@ -118,10 +118,10 @@ def get_dof_vel(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
 ```
 
 Get the DoF velocities of the floating base.
-        
+
         Args:
             data: The scene data to query.
-        
+
         Returns:
             NDArray[float]: The DoF velocities with (vx,vy,vz wx,wy,wz) format. shape = (data.shape,
             6).
@@ -133,10 +133,10 @@ def get_global_angular_velocity(self, data: SceneData) -> numpy.typing.NDArray[n
 ```
 
 Extract the world angular velocity of the floating base from the dof velocity array.
-        
+
         Args:
             data: The scene data to query.
-        
+
         Returns:
             NDArray[float]: The world angular velocity. shape = (data.shape, 3)
 
@@ -147,10 +147,10 @@ def get_global_linear_velocity(self, data: SceneData) -> numpy.typing.NDArray[nu
 ```
 
 Extract the world linear velocity of the floating base from the dof velocity array.
-        
+
         Args:
             data: The scene data to query.
-        
+
         Returns:
             NDArray[float]: The world linear velocity. shape = (data.shape, 3)
 
@@ -161,10 +161,10 @@ def get_local_angular_velocity(self, data: SceneData) -> numpy.typing.NDArray[nu
 ```
 
 Extract the local angular velocity of the floating base from the dof velocity array.
-        
+
         Args:
             data: The scene data to query.
-        
+
         Returns:
             NDArray(float): The local angular velocity. shape = (data.shape, 3)
 
@@ -175,10 +175,10 @@ def get_rotation(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
 ```
 
 Extract the world rotation of the floating base from the dof position array.
-        
+
         Args:
             data: The scene data.
-        
+
         Returns:
             NDArray[float]: A quaternion representing the rotation in the format `[i, j, k, w]`.
 
@@ -189,10 +189,10 @@ def get_translation(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32
 ```
 
 Extract the world translation of the floating base from the dof position array.
-        
+
         Args:
             data: The scene data to query.
-        
+
         Returns:
             NDArray[float]: The world translation. shape = (data.shape, 3)
 
@@ -203,11 +203,11 @@ def set_global_angular_velocity(self, data: SceneData, vel: Any) -> None
 ```
 
 Set the global angular velocity of the floating base to dof velocity array directly.
-        
+
         Args:
             data: The scene data to store the velocity.
             vel: The global angular velocity to set. shape = (data.shape, 3)
-        
+
         Note:
             This method only updates the dof velocity array.
 
@@ -218,11 +218,11 @@ def set_global_linear_velocity(self, data: SceneData, vel: Any) -> None
 ```
 
 Set the global linear velocity of the floating base to dof velocity array directly.
-        
+
         Args:
             data: The scene data to store the velocity.
             vel: The world linear velocity to set. shape = (data.shape, 3)
-        
+
         Note:
           This method only updates the dof velocity array.
 
@@ -233,11 +233,11 @@ def set_local_angular_velocity(self, data: SceneData, vel: Any) -> None
 ```
 
 Set the local angular velocity of the floating base to dof velocity array directly.
-        
+
         Args:
             data: The scene data to store the velocity.
             vel (ArrayLink(float)): The local angular velocity, shape = (data.shape, 3).
-        
+
         Note:
             This method only updates the dof velocity array.
 
@@ -248,11 +248,11 @@ def set_rotation(self, data: SceneData, quat: Any) -> None
 ```
 
 Set the world rotation of the floating base.
-        
+
         Args:
             data: The scene data to store the rotation.
             quat: The quaternion [i, j, k, w]. shape = (data.shape, 4).
-        
+
         Notes:
             This function only updates the DoF position of the floating base. The actual rotation
             is updated through the forward kinematic phase.
@@ -264,11 +264,11 @@ def set_translation(self, data: SceneData, translation: Any) -> None
 ```
 
 Set the world translation of the floating base.
-        
+
         Args:
             data: The scene data to store the translation.
             translation: The translation [x, y, z]. shape = (data.shape, 3).
-        
+
         Notes:
             This function only updates the DoF position of the floating base. The actual
             translation of links is updated through the forward kinematic phase.

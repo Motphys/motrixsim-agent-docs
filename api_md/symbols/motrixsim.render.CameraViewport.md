@@ -30,7 +30,7 @@ def remove(self) -> None
 ```
 
 Remove the camera viewport widget from the render window.
-        
+
         Note:
             After calling this method, the viewport will be removed from the render window.
             Any further calls to `update()` on this object will result in an error.
@@ -42,7 +42,7 @@ def update(self, camera: Optional[Camera] = None, layout: Optional[Layout] = Non
 ```
 
 Update the camera viewport widget.
-        
+
         Args:
             camera: New camera object to display. If not provided,
                 keeps the current camera.

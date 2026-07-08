@@ -64,13 +64,13 @@ def __new__(cls, left: Optional[Any] = None, right: Optional[Any] = None, top: O
 ```
 
 Create a new layout configuration.
-        
+
         Note:
             The layout parameters accept multiple formats:
             - String: "50px" for pixels, "50%" for percentage, "auto" for automatic
             - Number: Interpreted as pixels (e.g., 50 = 50px)
             All parameters default to "auto" if not specified.
-        
+
         Args:
             left: Left position. Default is "auto".
             right: Right position. Default is "auto".
@@ -78,11 +78,11 @@ Create a new layout configuration.
             bottom: Bottom position. Default is "auto".
             width: Width. Default is "auto".
             height: Height. Default is "auto".
-        
+
         Example:
-        
+
         .. code:: python
-        
+
             # Specify only the parameters you need
             layout1 = motrixsim.render.Layout(left=50, top=50, width=200, height=200)
             # All parameters default to "auto"

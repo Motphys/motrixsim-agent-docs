@@ -41,7 +41,7 @@ def set_pose(self, data: SceneData, pose: Any) -> None
 ```
 
 Set the pose of the mocap.
-        
+
         Args:
           data: The scene data to store the pose.
           pose: The pose to set, as a 7-element array (x, y, z, qx, qy, qz, qw).

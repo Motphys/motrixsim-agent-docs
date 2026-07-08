@@ -3,7 +3,7 @@
 Module: [`motrixsim`](../modules/motrixsim.md)
 
 The HField object represents a height field terrain in the scene.
-    
+
     This class provides access to height field (terrain) data used for ground interactions,
     terrain following, and surface-based physics. Height fields provide an efficient way
     to represent large terrain surfaces with elevation data.
@@ -27,7 +27,7 @@ bound: numpy.typing.NDArray[numpy.float32]
 ```
 
 Get the bounding box of the height field in local space.
-    
+
     Returns:
         NDArray[float]: A 1D numpy array of shape (6,) representing the bounding box
             in the format `[-extent_x, -extent_y, 0, extent_x, extent_y, size_z]`.
@@ -39,13 +39,14 @@ height_matrix: numpy.typing.NDArray[numpy.float32]
 ```
 
 Get the height matrix data as a numpy array.
-    
+
     Note:
         The returned array is a copy of the internal data. Modifying it will not affect the
         hfield.
-    
+
     Returns:
         NDArray[float]: A 2D numpy array of shape (nrow, ncol) containing the height values.
+        Row 0 is the -Y side, matching MuJoCo's compiled hfield data order.
 
 ### index
 
@@ -70,7 +71,7 @@ name: Optional[str]
 ```
 
 The name of the hfield. Must be unique within the scene.
-    
+
     Returns:
         Optional[str]: The name of the hfield, or "None" if not set.
 
@@ -103,7 +104,7 @@ def get(self, row: int, col: int) -> float
 ```
 
 Get the height value at the specified row and column.
-        
+
         Args:
             row: The row index (0-based).
             col: The column index (0-based).

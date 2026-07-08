@@ -8,8 +8,22 @@ Widgets module for creating UI widgets in the render window.
 
 | Name | Signature | Description |
 |------|-----------|-------------|
+| `clear` | `(self) -> None` | Remove all widgets from the render window. |
 | `create_camera_viewport` | `(self, camera: Camera, layout: Optional[Layout] = None, sim_world_index: int = 0) -> CameraViewport` | Create a camera viewport widget in the render window. |
 | `create_image_widget` | `(self, image: Image, layout: Optional[Layout] = None) -> ImageWidget` | Create an image widget in the render window. |
+
+### clear
+
+```python
+def clear(self) -> None
+```
+
+Remove all widgets from the render window.
+
+        Note:
+            Despawns every widget previously created on this render app (camera
+            viewports, image widgets). Useful when reusing a single render app
+            across scenes, to drop the previous scene's overlays.
 
 ### create_camera_viewport
 
@@ -18,24 +32,24 @@ def create_camera_viewport(self, camera: Camera, layout: Optional[Layout] = None
 ```
 
 Create a camera viewport widget in the render window.
-        
+
         Note:
             This creates a camera viewport overlay that displays the output of a sensor camera.
             The layout parameters accept multiple formats:
-        
+
                 - String: "50px" for pixels, "50%" for percentage, "auto" for automatic
                 - Number: Interpreted as pixels (e.g., 50 = 50px)
-        
+
         Args:
             camera: The camera object to display in the viewport.
             layout: The layout configuration for the viewport. If None,
                 uses default layout (50px from top-left with 200x200 size).
             sim_world_index: The index of the simulation world. Default is 0.
-        
+
         Example:
-        
+
         .. code:: python
-        
+
             renderer = motrixsim.render.RenderApp()
             renderer.launch(model)
             cameras = model.cameras
@@ -60,22 +74,22 @@ def create_image_widget(self, image: Image, layout: Optional[Layout] = None) -> 
 ```
 
 Create an image widget in the render window.
-        
+
         Note:
             This creates an image widget overlay that displays the specified image.
             The layout parameters accept multiple formats:
             - String: "50px" for pixels, "50%" for percentage, "auto" for automatic
             - Number: Interpreted as pixels (e.g., 50 = 50px)
-        
+
         Args:
             image: The image object to display in the widget.
             layout: The layout configuration for the widget. If None,
                 uses default layout (0px from top-left with automatic size).
-        
+
         Example:
-        
+
         .. code:: python
-        
+
             renderer = motrixsim.render.RenderApp()
             renderer.launch(model)
             # Load an image

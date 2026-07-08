@@ -3,7 +3,7 @@
 Module: [`motrixsim`](../modules/motrixsim.md)
 
 The Keyframe object represents a keyframe in the scene.
-    
+
     This class provides access to the properties of a keyframe, including
     its name, simulation time, joint positions, velocities, and control values.
 
@@ -26,7 +26,7 @@ ctrl: numpy.typing.NDArray[numpy.float32]
 ```
 
 NDArray[float]: The actuator control values of the keyframe.
-    
+
     Returns a numpy array with shape (num_actuators,) containing the actuator
     control values for all actuators in the scene.
 
@@ -37,7 +37,7 @@ dof_pos: numpy.typing.NDArray[numpy.float32]
 ```
 
 NDArray[float]: The dof positions of the keyframe.
-    
+
     Returns a numpy array with shape (num_dof_pos,) containing the dof positions
     for all degrees of freedom in the scene.
 
@@ -48,7 +48,7 @@ dof_vel: numpy.typing.NDArray[numpy.float32]
 ```
 
 NDArray[float]: The joint velocities of the keyframe.
-    
+
     Returns a numpy array with shape (num_dof_vel,) containing the joint velocities
     for all degrees of freedom in the scene.
 
@@ -97,20 +97,20 @@ def apply(self, data: SceneData) -> None
 ```
 
 Apply the keyframe to scene data.
-        
+
         Args:
             data: Scene data to apply the keyframe to.
-        
+
         Note:
             This method does NOT automatically call `forward_kinematic`. Users should
             call `model.forward_kinematic(data)` after applying the keyframe if they
             need to update the scene transforms (e.g., for visualization or getting
             correct link poses).
-        
+
         Example:
-        
+
         .. code:: python
-        
+
             model = motrixsim.load_model("scene.xml")
             data = motrixsim.SceneData(model)
             # Apply first keyframe

@@ -15,7 +15,7 @@ pixels: Any
 ```
 
 NDArray[byte]: Get the pixels of the image as a numpy array.
-    
+
     Note:
         For regular images, returns a 3D array with shape
         ``(height, width, channels)`` where channels is 3 (RGB) or 4 (RGBA)
@@ -36,6 +36,6 @@ def save_to_disk(self, path: str) -> None
 ```
 
 Save the image to disk with the specified path.
-        
+
         Raise:
             PyIOError: If saving the image fails.

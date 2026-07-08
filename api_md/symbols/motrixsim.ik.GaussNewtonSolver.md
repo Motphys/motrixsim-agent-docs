@@ -3,7 +3,7 @@
 Module: [`motrixsim.ik`](../modules/motrixsim.ik.md)
 
 Use gauss newton iterative method to solve inverse kinematics problem.
-    
+
     Args:
        max_iter: Maximum number of iterations (default: 100).
        step_size: Step size for each iteration (default: 0.5).
@@ -29,13 +29,13 @@ def solve(self, ik_model: Any, data: SceneData, target_pose: numpy.typing.NDArra
 ```
 
 Solve the IK problem for the given chain and target pose.
-        
+
         Args:
             ik_model: The IK model. Currently only `IkChain` is supported.
             data: The scene data containing the current state.
                 target_pose: The target pose the end effector want to reach.  It is
                 a 7-element array with (x, y, z, i, j, k, w) format.
-        
+
         Returns:
           A numpy array with shape `(data.shape, ik_model.num_dof_pos + 2,)`. For each row, the
           first element   is the number of iterations used, the second element is the final

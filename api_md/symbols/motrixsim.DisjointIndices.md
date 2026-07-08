@@ -36,7 +36,7 @@ def __new__(cls, indices: Any) -> DisjointIndices
 ```
 
 Create disjoint indices from a list of indices or a bool mask.
-        
+
         Args:
             indices: The list of indices.
             - If type is `ArrayLike[int]`, it creates disjoint indices from the list of indices.

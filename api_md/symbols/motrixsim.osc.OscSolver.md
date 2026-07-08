@@ -3,10 +3,10 @@
 Module: [`motrixsim.osc`](../modules/motrixsim.osc.md)
 
 Operational Space Controller Solver.
-    
+
     Pure functional interface - no internal state.
     Users manage IkChain and targets themselves.
-    
+
     Args:
         control_ori: Whether to control orientation. Default True.
         uncouple_pos_ori: Whether to decouple position/orientation. Default True.
@@ -34,7 +34,7 @@ def solve(self, chain: IkChain, ee_target_pos: Any, ee_target_ori: Any, nullspac
 ```
 
 Compute joint torques to track end-effector target.
-        
+
         Args:
             chain: The kinematic chain (user manages this).
             ee_target_pos: Target position in world frame.
@@ -44,6 +44,6 @@ Compute joint torques to track end-effector target.
             nullspace_joint_pos: Target joint positions for nullspace control.
                 Shape: ``(*data.shape, num_dof)``
             data: Current simulation data.
-        
+
         Returns:
             ndarray: Joint torques. Shape: ``(*data.shape, num_dof)``.
