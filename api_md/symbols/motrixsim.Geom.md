@@ -16,6 +16,7 @@ The Geom object represents a geometry in the scene.
     - `GeomEllipsoid` - ellipsoidal geometry with ``half_extents``
     - `GeomPlane` - sized plane geometry
     - `GeomMesh` - mesh geometry with ``mesh_name`` and ``mesh_scale``
+    - `GeomSDF` - SDF geometry with ``mesh_name`` and ``mesh_scale``
     - `GeomHField` - height field geometry with ``hfield``
     - `GeomInfinitePlane` - infinite plane geometry
 
@@ -196,7 +197,7 @@ The shape type of the geom.
     Note:
         The high-level shape type determines the source geometric representation of the geom.
         Possible values include: Sphere, Cylinder, Capsule, Cuboid, InfinitePlane,
-        HField, Mesh, and Plane. Each shape type has different parameters and
+        HField, Mesh, Sdf, and Plane. Each shape type has different parameters and
         may lower to different low-level runtime collider shapes.
 
 ### size
@@ -219,7 +220,8 @@ The size parameters of the geom.
             - **Cylinder**: `[radius, half_height, 0.0]` - radius and half-height
             - **Cuboid**: `[half_x, half_y, half_z]` - half-extents in each axis
             - **Plane**: `[half_x, half_y, 0.0]` - half-extents in x and y directions
-            - **Mesh/HField/InfinitePlane**: `[0.0, 0.0, 0.0]` - size is ignored for these types
+            - **Mesh/Sdf/HField/InfinitePlane**: `[0.0, 0.0, 0.0]` - size is ignored for these
+              types
 
         When a primitive shape references a mesh file, the size is automatically
         computed from the mesh geometry and the geom size parameters are ignored.

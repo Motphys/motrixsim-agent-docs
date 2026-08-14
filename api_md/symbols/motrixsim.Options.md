@@ -11,27 +11,12 @@ The Options object represents the simulation options.
 
 | Name | Type | Description |
 |------|------|-------------|
-| `_convex_strategy` | `str` | The convex hull generation strategy. |
 | `disable_contacts` | `bool` | Is all contact constraints disabled in the simulation? |
 | `disable_gravity` | `bool` | Is the gravity disabled in the simulation? |
 | `gravity` | `numpy.typing.NDArray[numpy.float32]` | NDArray[float]: The gravity vector applied to the simulation. |
 | `max_iterations` | `int` | The maximum number of iterations for the solver. |
 | `solver_tolerance` | `float` | The tolerance for the solver. |
 | `timestep` | `float` | The delta time for each simulation step. |
-
-### _convex_strategy
-
-```python
-_convex_strategy: str
-```
-
-The convex hull generation strategy.
-
-    Returns "quick_convex" or "q_hull".
-
-    Note:
-        - quick_convex: Fast approximation algorithm (default)
-        - q_hull: Exact algorithm (only available if compiled with qhull feature)
 
 ### disable_contacts
 

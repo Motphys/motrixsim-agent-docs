@@ -9,6 +9,38 @@ Position actuator (MJCF ``<position>``).
     - ``kp`` -> kp (writes both gain and stiffness internally)
     - ``kv`` -> kd (writes damping internally, defaults to 0)
 
+## Properties
+
+| Name | Type | Description |
+|------|------|-------------|
+| `kd` | `Optional[float]` | The derivative gain (kd) configured in the model. |
+| `kp` | `float` | The proportional gain (kp) configured in the model. |
+
+### kd
+
+```python
+kd: Optional[float]
+```
+
+The derivative gain (kd) configured in the model.
+
+    Unlike `get_kd_override`, this property reads the static model configuration and
+    does not require scene data.
+
+    Note:
+        Returns None when this actuator stores DampingType.Dampratio in the model.
+
+### kp
+
+```python
+kp: float
+```
+
+The proportional gain (kp) configured in the model.
+
+    Unlike `get_kp_override`, this property reads the static model configuration and
+    does not require scene data.
+
 ## Methods
 
 | Name | Signature | Description |
@@ -84,8 +116,7 @@ Override the damping value for a position actuator.
                 - Shape: ``(*data.shape,)``: Per-batch values
 
         Note:
-            if the value is negative, NaN, infinite, or the actuator type does
-            not support independent damping overrides, the override will be ignored.
+            if the value is negative, NaN, or infinite, the override will be ignored.
 
 ### set_kp_override
 
@@ -102,5 +133,4 @@ Override the kp value for a position actuator. Writes both gain and stiffness.
                 - Shape: ``(*data.shape,)``: Per-batch values
 
         Note:
-            if the value is negative, NaN, infinite, or the actuator is not a
-            position actuator, the override will be ignored.
+            if the value is negative, NaN, or infinite, the override will be ignored.

@@ -30,6 +30,8 @@ Note
 | `o_solimp` | `real(n)` | no | — | These attributes replace the solref, solimp and friction parameters of all active contact  pairs when contact override is enabled. |
 | `o_friction` | `real(n)` | no | — | These attributes replace the solref, solimp and friction parameters of all active contact  pairs when contact override is enabled. |
 | `o_margin` | `real` | yes | `0.0` | This attribute replaces the margin parameter of all active contact pairs when Contact  override is enabled. Otherwise the element-specific margin attribute of geom or pair is  used depending on how the contact pair was generated. The related gap parameter does not  have a global override. |
+| `sdf_iterations` | `int` | yes | `10` | Number of iterations used for Signed Distance Field collisions (per initial poing) |
+| `sdf_initpoints` | `int` | yes | `40` | Number of starting points used for finding contacts with Signed Distance Field collisions |
 
 ## option/flag
 

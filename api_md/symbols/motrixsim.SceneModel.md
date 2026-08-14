@@ -411,12 +411,14 @@ List[Site]: The list of all sites in the world.
 | `get_joint` | `(self, key: Any) -> Optional[Joint]` | Get a joint by name or index. |
 | `get_joint_index` | `(self, name: str) -> Optional[int]` | Get the joint index by its name. |
 | `get_link` | `(self, arg: Any) -> Optional[Link]` | Get a link by name or index. |
-| `get_link_angular_velocities` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the world angular velocities of all links. |
+| `get_link_angular_velocities` | `(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]` | Get the world angular velocities of all links. |
 | `get_link_index` | `(self, name: str) -> Optional[int]` | Get the link index by its name. |
-| `get_link_linear_velocities` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the world linear velocities of all links. |
-| `get_link_poses` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the world poses of all links. |
-| `get_link_rotation_mats` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get all link rotation matrices. |
-| `get_link_velocities` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the world velocities (linear and angular) of all links. |
+| `get_link_linear_velocities` | `(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]` | Get the world linear velocities of all links. |
+| `get_link_net_contact_forces` | `(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]` | Get the net contact force acting on each link, resolved at the link center of mass. |
+| `get_link_poses` | `(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]` | Get the world poses of all links. |
+| `get_link_rotation_mats` | `(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]` | Get all link rotation matrices. |
+| `get_link_states` | `(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]` | Get the full world states (pose and velocity) of links in a single call. |
+| `get_link_velocities` | `(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]` | Get the world velocities (linear and angular) of all links. |
 | `get_sensor_value` | `(self, id: str, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the value of a specific sensor by its ID. |
 | `get_sensor_values` | `(self, names: Sequence[str], data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the values of multiple sensors by their names, concatenated into a single array. |
 | `get_site` | `(self, key: Any) -> Optional[Site]` | Get a site by name or index. |
@@ -659,7 +661,7 @@ Get a link by name or index.
 ### get_link_angular_velocities
 
 ```python
-def get_link_angular_velocities(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
+def get_link_angular_velocities(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]
 ```
 
 Get the world angular velocities of all links.
@@ -667,8 +669,16 @@ Get the world angular velocities of all links.
         Args:
             data: Scene data.
 
+            indices: Link indices to query. When ``None`` (default), all
+                links are returned in order. Otherwise only the selected links are returned, in the
+                given order, and ``N`` below equals ``len(indices)``.
+
+            out: Pre-allocated output array of shape
+                `(*data.shape, N, 3)`. When provided, results are written into this array
+                and it is returned directly, avoiding a per-call allocation.
+
         Returns:
-            NDArray[float]: A numpy array with shape `(*data.shape, num_links, 3)`. Each velocity is
+            NDArray[float]: A numpy array with shape `(*data.shape, N, 3)`. Each velocity is
             composed of `[wx, wy, wz]`.
 
 ### get_link_index
@@ -688,7 +698,7 @@ Get the link index by its name.
 ### get_link_linear_velocities
 
 ```python
-def get_link_linear_velocities(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
+def get_link_linear_velocities(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]
 ```
 
 Get the world linear velocities of all links.
@@ -696,14 +706,53 @@ Get the world linear velocities of all links.
         Args:
             data: Scene data.
 
+            indices: Link indices to query. When ``None`` (default), all
+                links are returned in order. Otherwise only the selected links are returned, in the
+                given order, and ``N`` below equals ``len(indices)``.
+
+            out: Pre-allocated output array of shape
+                `(*data.shape, N, 3)`. When provided, results are written into this array
+                and it is returned directly, avoiding a per-call allocation.
+
         Returns:
-            NDArray[float]: A numpy array with shape `(*data.shape, num_links, 3)`. Each velocity is
+            NDArray[float]: A numpy array with shape `(*data.shape, N, 3)`. Each velocity is
             composed of `[vx, vy, vz]`.
+
+### get_link_net_contact_forces
+
+```python
+def get_link_net_contact_forces(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]
+```
+
+Get the net contact force acting on each link, resolved at the link center of mass.
+
+        Args:
+            data: Scene data.
+
+            indices: Link indices to query. When ``None`` (default), all
+                links are returned in order. Otherwise only the selected links are returned, in the
+                given order, and ``N`` below equals ``len(indices)``.
+
+            out: Pre-allocated output array of shape
+                `(*data.shape, N, 6)`. When provided, results are written into this array
+                and it is returned directly, avoiding a per-call allocation.
+
+        Returns:
+            NDArray[float]: A numpy array with shape `(*data.shape, N, 6)`. Each row is composed of
+            `[fx, fy, fz, tx, ty, tz]`: the net contact force (3) and the net contact moment about
+            the link center of mass (3), both expressed in world frame.
+
+        Note:
+            This query reads the contact force report, which is disabled by default. Enable it
+            explicitly via `motrixsim.ReportFlags.contact_forces`
+            (``model.reports.contact_forces = True``) and step the simulation once before reading;
+            otherwise a ``RuntimeError`` is raised. The query is read-only and never toggles the
+            switch itself.
 
 ### get_link_poses
 
 ```python
-def get_link_poses(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
+def get_link_poses(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]
 ```
 
 Get the world poses of all links.
@@ -711,14 +760,22 @@ Get the world poses of all links.
         Args:
             data: Scene data.
 
+            indices: Link indices to query. When ``None`` (default), all
+                links are returned in order. Otherwise only the selected links are returned, in the
+                given order, and ``N`` below equals ``len(indices)``.
+
+            out: Pre-allocated output array of shape
+                `(*data.shape, N, 7)`. When provided, results are written into this array
+                and it is returned directly, avoiding a per-call allocation.
+
         Returns:
-            NDArray[float]: A numpy array with shape `(*data.shape,num_links, 7)`. Each pose is
+            NDArray[float]: A numpy array with shape `(*data.shape, N, 7)`. Each pose is
             composed of `[x, y, z, i, j, k, w]`,
 
 ### get_link_rotation_mats
 
 ```python
-def get_link_rotation_mats(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
+def get_link_rotation_mats(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]
 ```
 
 Get all link rotation matrices.
@@ -726,14 +783,47 @@ Get all link rotation matrices.
         Args:
             data: Scene data.
 
+            indices: Link indices to query. When ``None`` (default), all
+                links are returned in order. Otherwise only the selected links are returned, in the
+                given order, and ``N`` below equals ``len(indices)``.
+
+            out: Pre-allocated output array of shape
+                `(*data.shape, N, 3, 3)`. When provided, results are written into this array
+                and it is returned directly, avoiding a per-call allocation.
+
         Returns:
-            NDArray[float]: A numpy array with shape `(*data.shape,num_links, 3, 3)`. Each rotation
+            NDArray[float]: A numpy array with shape `(*data.shape, N, 3, 3)`. Each rotation
         matrix is in column-major order.
+
+### get_link_states
+
+```python
+def get_link_states(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]
+```
+
+Get the full world states (pose and velocity) of links in a single call.
+
+        Args:
+            data: Scene data.
+
+            indices: Link indices to query. When ``None`` (default), all
+                links are returned in order. Otherwise only the selected links are returned, in the
+                given order, and ``N`` below equals ``len(indices)``.
+
+            out: Pre-allocated output array of shape
+                `(*data.shape, N, 13)`. When provided, results are written into this array
+                and it is returned directly, avoiding a per-call allocation.
+
+        Returns:
+            NDArray[float]: A numpy array with shape `(*data.shape, N, 13)`. Each row is composed
+            of `[x, y, z, i, j, k, w, vx, vy, vz, wx, wy, wz]`, i.e. position (3) + rotation
+            quaternion (4) + linear velocity (3) + angular velocity (3). The first 7 columns match
+            `get_link_poses` and the last 6 columns match `get_link_velocities`.
 
 ### get_link_velocities
 
 ```python
-def get_link_velocities(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
+def get_link_velocities(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]
 ```
 
 Get the world velocities (linear and angular) of all links.
@@ -741,8 +831,16 @@ Get the world velocities (linear and angular) of all links.
         Args:
             data: Scene data.
 
+            indices: Link indices to query. When ``None`` (default), all
+                links are returned in order. Otherwise only the selected links are returned, in the
+                given order, and ``N`` below equals ``len(indices)``.
+
+            out: Pre-allocated output array of shape
+                `(*data.shape, N, 6)`. When provided, results are written into this array
+                and it is returned directly, avoiding a per-call allocation.
+
         Returns:
-            NDArray[float]: A numpy array with shape `(*data.shape, num_links, 6)`. Each velocity is
+            NDArray[float]: A numpy array with shape `(*data.shape, N, 6)`. Each velocity is
             composed of `[vx, vy, vz, wx, wy, wz]`.
 
 ### get_sensor_value

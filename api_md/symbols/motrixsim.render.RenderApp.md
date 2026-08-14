@@ -90,6 +90,7 @@ The widgets module of the render app.
 | `__enter__` | `(self) -> RenderApp` |  |
 | `__exit__` | `(self, exc_type: Any, _exc_val: Any, _exc_tb: Any) -> bool` |  |
 | `__new__` | `(cls, log_level: str = 'WARN', headless: bool = False, fps: Optional[int] = None, enable_render_diagnostics: bool = False) -> RenderApp` | Create a new RenderApp instance. |
+| `close` | `(self) -> None` | Close the render app and release its backend resources. |
 | `create_image` | `(self, pixels: numpy.typing.NDArray[numpy.uint8], is_srgb: bool = True, keep_in_cpu: bool = True) -> Image` | Create an image from a numpy array of pixel data. |
 | `get_camera` | `(self, index: int) -> Optional[RenderCamera]` | Get a render camera instance. |
 | `get_texture_image` | `(self, name: str) -> Image` | Get the image handle of a texture loaded by name. |
@@ -126,6 +127,16 @@ Create a new RenderApp instance.
         unlimited FPS. Default is None.
             enable_render_diagnostics: Whether to enable Bevy GPU render diagnostics.
         Default is False.
+
+### close
+
+```python
+def close(self) -> None
+```
+
+Close the render app and release its backend resources.
+
+        Calling this method more than once has no effect.
 
 ### create_image
 

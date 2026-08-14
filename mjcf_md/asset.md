@@ -3,7 +3,7 @@
 **Path**: `asset`
 **Tag**: `asset`
 **Parent**: `mujoco`
-**Children**: `asset/material`, `asset/mesh`, `asset/texture`, `asset/hfield`, `asset/gsplat`, `asset/model`
+**Children**: `asset/material`, `asset/mesh`, `asset/texture`, `asset/hfield`, `asset/gsplat`, `asset/model`, `asset/lidar`
 **Rust Type**: `model::asset::Asset`
 
 This is a grouping element for defining assets. It does not have
@@ -81,10 +81,7 @@ This element creates a mesh asset, which can then be referenced from geoms.
  The size of the mesh is determined by the 3D coordinates of the vertex data
  multiplied by the components of the scale attribute. Scaling is applied
  separately for each coordinate axis. Negative scaling values can be used to
- flip the mesh. The compiler pre-processes the mesh so that it is centered
- around (0,0,0) and its principal axes of inertia are the coordinate axes,
- saving the translation and rotation offsets for subsequent geom-related
- computations.
+ flip the mesh.
 
 Note
 
@@ -146,7 +143,7 @@ Note
 | `name` | `string` | no | — | Name of the texture, used for referencing. If omitted, the texture name  equals the file name without the path and extension. |
 | `file` | `string` | no | — | If this attribute is specified, and the builtin attribute is set to  \"none\", the texture data is loaded from a single file. See the  texturedir attribute of the compiler element regarding the file path. |
 | `builtin` | `string` | yes | `"none"` | Controls the generation of procedural textures. If the value is  different from \"none\", the texture is treated as procedural and any file  names are ignored. Choice: `none`, `gradient`, `checker`, `flat`, `dynamic`. |
-| `type` | `string` | yes | `"cube"` | This attribute determines how the texture is represented and mapped to  objects. It also determines which of the remaining attributes are  relevant. Choice: `cube`, `2d`, `skybox`, `envdiff`, `envspec`, `probe`. |
+| `type` | `string` | yes | `"cube"` | This attribute determines how the texture is represented and mapped to  objects. It also determines which of the remaining attributes are  relevant. Choice: `cube`, `2d`, `skybox`, `envhdr`, `envdiff`, `envspec`, `probe`. |
 | `rgb1` | `real(3)` | yes | `"0.8 0.8 0.8"` | The first color used for procedural texture generation. This color is  also used to fill missing sides of cube and skybox textures loaded from  files. The components should be in the range [0 1]. |
 | `rgb2` | `real(3)` | yes | `"0.5 0.5 0.5"` | The second color used for procedural texture generation. |
 | `width` | `real` | yes | `0.0` | The width of a procedural texture, i.e., the number of columns in the  image. Larger values usually result in higher quality images. For  textures loaded from files, this attribute is ignored. |
@@ -237,4 +234,35 @@ This element specifies other MJCF models which may be used for attachment
 |------|------|----------|---------|-------------|
 | `name` | `string` | no | — | Name of the sub-model, used for referencing in attach. If unspecified,  the model name from the sub-model's root element is used. |
 | `file` | `string` | yes | `""""` | The file from which the sub-model will be loaded. The sub-model must be  a valid MJCF model. |
+
+## asset/lidar [MPEX]
+
+**Path**: `asset/lidar`
+**Tag**: `lidar`
+**Parent**: `asset`
+**Children**: none
+**Rust Type**: `model::sensor::sensors::LidarAsset`
+
+A reusable lidar model profile referenced by `sensor/lidar`.
+
+Note
+
+ This is a MotrixSim extension to MJCF. It contains reusable model and scan attributes. Sensor
+ identity, mounting site, asset reference, self-filter policy, and scan rate remain on the sensor
+ instance.
+
+### Attributes
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `name` | `string` | yes | `""""` | [MPEX] Name used by sensor instances to reference this profile. |
+| `cutoff` | `real` | yes | `100.0` | [MPEX] Maximum ray distance in meters. |
+| `pattern` | `string` | yes | `"grid"` | [MPEX] Geometric scan pattern. Choice: `grid`, `rings`. |
+| `hscan` | `int` | yes | `1` | [MPEX] Number of horizontal azimuth samples for grid and rings patterns. |
+| `vscan` | `int` | yes | `1` | [MPEX] Number of vertical elevation samples for the grid pattern. |
+| `hrange` | `real(2)` | yes | `"0.0 0.0"` | [MPEX] Horizontal azimuth range in degrees. |
+| `vrange` | `real(2)` | yes | `"0.0 0.0"` | [MPEX] Vertical elevation range in degrees for the grid pattern. |
+| `elevations` | `real(n)` | no | — | [MPEX] Elevation angles in degrees for the rings pattern. |
+| `reportrate` | `real` | no | — | [MPEX] Number of horizontal columns reported per second, used to derive `hscan` from `hz`. |
+| `hzrange` | `real(2)` | no | — | [MPEX] Supported inclusive full-scan frequency range in hertz; equal endpoints fix the frequency. |
 

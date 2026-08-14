@@ -182,8 +182,8 @@ The number of links that belong to this body.
 | `get_dof_vel_indices` | `(self, include_floatingbase: bool = True) -> numpy.typing.NDArray[numpy.uint32]` | Get the indices of the DoF velocities of the body. |
 | `get_geom` | `(self, arg: Any) -> Optional[Geom]` | Get a geom that belongs to this body by name or body-local index. |
 | `get_joint` | `(self, arg: Any) -> Optional[Joint]` | Get a joint that belongs to this body by name or body-local index. |
-| `get_joint_dof_pos` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the DoF positions of all joints on the body. |
-| `get_joint_dof_vel` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the DoF velocities of all joints on the body. |
+| `get_joint_dof_pos` | `(self, data: SceneData, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]` | Get the DoF positions of all joints on the body. |
+| `get_joint_dof_vel` | `(self, data: SceneData, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]` | Get the DoF velocities of all joints on the body. |
 | `get_link` | `(self, arg: Any) -> Optional[Link]` | Get a link that belongs to this body by name or body-local index. |
 | `get_pose` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the world pose of the body. |
 | `get_position` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the world position of the body. |
@@ -262,13 +262,17 @@ Get a joint that belongs to this body by name or body-local index.
 ### get_joint_dof_pos
 
 ```python
-def get_joint_dof_pos(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
+def get_joint_dof_pos(self, data: SceneData, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]
 ```
 
 Get the DoF positions of all joints on the body.
 
         Args:
             data: The scene data to query.
+
+            out: Pre-allocated output array of shape
+                (`*data.shape`, `num_joint_dof_pos`). When provided, results are written into
+                this array and it is returned directly, avoiding a per-call allocation.
 
         Returns:
             NDArray[float]: The DoF positions. shape = (`*data.shape`, `num_joint_dof_pos`).
@@ -279,13 +283,17 @@ Get the DoF positions of all joints on the body.
 ### get_joint_dof_vel
 
 ```python
-def get_joint_dof_vel(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
+def get_joint_dof_vel(self, data: SceneData, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]
 ```
 
 Get the DoF velocities of all joints on the body.
 
         Args:
             data: The scene data to query.
+
+            out: Pre-allocated output array of shape
+                (`*data.shape`, `num_joint_dof_vel`). When provided, results are written into
+                this array and it is returned directly, avoiding a per-call allocation.
 
         Returns:
             NDArray[float]: The DoF velocities. shape = (`*data.shape`,:meth:

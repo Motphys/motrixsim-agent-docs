@@ -3,7 +3,7 @@
 **Path**: `sensor`
 **Tag**: `sensor`
 **Parent**: `mujoco`
-**Children**: `sensor/touch`, `sensor/accelerometer`, `sensor/velocimeter`, `sensor/gyro`, `sensor/force`, `sensor/torque`, `sensor/jointpos`, `sensor/jointvel`, `sensor/jointactuatorfrc`, `sensor/ballquat`, `sensor/ballangvel`, `sensor/jointlimitpos`, `sensor/jointlimitvel`, `sensor/jointlimitfrc`, `sensor/tendonpos`, `sensor/tendonvel`, `sensor/tendonlimitpos`, `sensor/tendonlimitvel`, `sensor/tendonlimitfrc`, `sensor/actuatorpos`, `sensor/actuatorvel`, `sensor/actuatorfrc`, `sensor/framepos`, `sensor/framequat`, `sensor/framexaxis`, `sensor/frameyaxis`, `sensor/framezaxis`, `sensor/framelinvel`, `sensor/frameangvel`, `sensor/framelinacc`, `sensor/frameangacc`, `sensor/subtreecom`, `sensor/subtreelinvel`, `sensor/subtreeangmom`, `sensor/distance`, `sensor/normal`, `sensor/fromto`, `sensor/contact`
+**Children**: `sensor/touch`, `sensor/accelerometer`, `sensor/velocimeter`, `sensor/gyro`, `sensor/force`, `sensor/torque`, `sensor/jointpos`, `sensor/jointvel`, `sensor/jointactuatorfrc`, `sensor/ballquat`, `sensor/ballangvel`, `sensor/jointlimitpos`, `sensor/jointlimitvel`, `sensor/jointlimitfrc`, `sensor/tendonpos`, `sensor/tendonvel`, `sensor/tendonlimitpos`, `sensor/tendonlimitvel`, `sensor/tendonlimitfrc`, `sensor/actuatorpos`, `sensor/actuatorvel`, `sensor/actuatorfrc`, `sensor/framepos`, `sensor/framequat`, `sensor/framexaxis`, `sensor/frameyaxis`, `sensor/framezaxis`, `sensor/framelinvel`, `sensor/frameangvel`, `sensor/framelinacc`, `sensor/frameangacc`, `sensor/subtreecom`, `sensor/subtreelinvel`, `sensor/subtreeangmom`, `sensor/distance`, `sensor/normal`, `sensor/fromto`, `sensor/contact`, `sensor/lidar`
 **Rust Type**: `model::sensor::sensor_set::SensorSet`
 
 This element is a grouping element for sensors.
@@ -505,4 +505,30 @@ Note
 | `num` | `int` | yes | `1` | The maximum number of contacts to detect and report. When more contacts are found  than this value, only the first contacts (up to this limit) are used, unless a  reduction method is specified. |
 | `data` | `real(n)` | yes | `"found"` | The type or types of contact data to report in the sensor output. Multiple data  types may be listed in sequence. |
 | `reduce` | `string` | yes | `"none"` | The method used to reduce multiple contacts to a single output value. Choice: `none`, `mindist`, `maxforce`, `netforce`. |
+
+## sensor/lidar [MPEX]
+
+**Path**: `sensor/lidar`
+**Tag**: `lidar`
+**Parent**: `sensor`
+**Children**: none
+**Rust Type**: `model::sensor::sensors::SensorLidar`
+
+A multi-beam lidar sensor attached to a site.
+
+Note
+
+ This is a MotrixSim extension to MJCF. Model and scan attributes are defined by the referenced
+ `asset/lidar` profile; the sensor instance contains only identity, mounting, filtering, and
+ runtime-adjustable scan rate.
+
+### Attributes
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `name` | `string` | no | — | [MPEX] Name of the sensor. |
+| `asset` | `string` | yes | `""""` | [MPEX] Name of the required `asset/lidar` profile. |
+| `site` | `string` | yes | `""""` | [MPEX] The site whose local frame defines the ray origins and directions. This attribute is  required on sensor instances and is not supplied by `asset/lidar`. |
+| `exclude` | `string` | yes | `"parentbody"` | [MPEX] Self-filter policy for colliders belonging to the sensor's parent hierarchy. Choice: `none`, `parentbody`, `parentsubtree`. |
+| `hz` | `real` | no | — | [MPEX] Full-scan rate in hertz. If omitted, the complete pattern is sampled every physics step. |
 

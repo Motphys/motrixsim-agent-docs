@@ -12,7 +12,20 @@ Toggles for runtime report generation, accessed via `motrixsim.SceneModel.report
 
 | Name | Type | Description |
 |------|------|-------------|
+| `contact_forces` | `bool` | Whether the contact-force report is enabled. |
 | `contacting_geoms` | `bool` | Whether the contacting-geoms report is enabled. |
+
+### contact_forces
+
+```python
+contact_forces: bool
+```
+
+Whether the contact-force report is enabled.
+
+    Note:
+        Must be enabled before `motrixsim.SceneModel.get_link_net_contact_forces` returns
+        data. The report is produced starting from the step after it is enabled.
 
 ### contacting_geoms
 

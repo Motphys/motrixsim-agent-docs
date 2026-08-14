@@ -20,6 +20,7 @@ The source shape type of a high-level geometry.
 | `InfinitePlane` | `Any` | Infinite plane shape. |
 | `Mesh` | `Any` | Source mesh shape. |
 | `Plane` | `Any` | Sized plane shape. |
+| `Sdf` | `Any` | SDF octree shape. |
 | `Sphere` | `Any` | Sphere shape. |
 
 ### Capsule
@@ -85,6 +86,14 @@ Plane: Any
 ```
 
 Sized plane shape.
+
+### Sdf
+
+```python
+Sdf: Any
+```
+
+SDF octree shape.
 
 ### Sphere
 

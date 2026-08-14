@@ -24,6 +24,7 @@
 - [`GeomInfinitePlane`](../symbols/motrixsim.GeomInfinitePlane.md) - Infinite plane geometry.
 - [`GeomMesh`](../symbols/motrixsim.GeomMesh.md) - Mesh geometry.
 - [`GeomPlane`](../symbols/motrixsim.GeomPlane.md) - Sized plane geometry.
+- [`GeomSDF`](../symbols/motrixsim.GeomSDF.md) - SDF geometry.
 - [`GeomSphere`](../symbols/motrixsim.GeomSphere.md) - Sphere geometry.
 - [`HField`](../symbols/motrixsim.HField.md) - The HField object represents a height field terrain in the scene.
 - [`Joint`](../symbols/motrixsim.Joint.md) - The Joint object represents a joint in the scene.
