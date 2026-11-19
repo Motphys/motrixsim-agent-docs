@@ -3,7 +3,7 @@
 **Path**: `default`
 **Tag**: `default`
 **Parent**: `mujoco`
-**Children**: `default/default`, `default/geom`, `default/joint`, `default/light`, `default/mesh`, `default/material`, `default/general`, `default/motor`, `default/position`, `default/velocity`, `default/adhesion`, `default/camera`, `default/site`, `default/tendon`, `default/equality`
+**Children**: `default/default`, `default/geom`, `default/joint`, `default/light`, `default/mesh`, `default/material`, `default/general`, `default/motor`, `default/position`, `default/velocity`, `default/adhesion`, `default/camera`, `default/site`, `default/pair`, `default/tendon`, `default/equality`
 **Rust Type**: `model::default_::DefaultClass`
 
 This element is used to define default settings for various model elements.
@@ -148,8 +148,10 @@ This block documents the defaults context for `body/light`. The element semantic
 | `ambient` | `real(3)` | yes | `"0.0 0.0 0.0"` | The ambient color of the light, used by the default Phong lighting model. |
 | `diffuse` | `real(3)` | yes | `"0.7 0.7 0.7"` | The color of the light. For the Phong (default) lighting model, this defines the diffuse  color of the light. |
 | `specular` | `real(3)` | yes | `"0.3 0.3 0.3"` | The specular color of the light, used by the default Phong lighting model. |
-| `innerangle` | `real` | yes | `35.0` | ----------Motphys Only----------  Cutoff angle for spotlights in degrees as inner angle. Motphys-only extension. |
-| `nearz` | `real` | yes | `0.1` | The distance from the light to the near Z plane in the shadow map. Motphys-only extension. |
+| `innerangle` | `real` | yes | `35.0` | [MPEX] ----------Motphys Only----------  Cutoff angle for spotlights in degrees as inner angle. Motphys-only extension. |
+| `nearz` | `real` | yes | `0.1` | [MPEX] The distance from the light to the near Z plane in the shadow map. Motphys-only extension. |
+| `depthbias` | `real` | no | — | [MPEX] Shadow query offset toward the light in world units. Motphys-only extension. |
+| `normalbias` | `real` | no | — | [MPEX] Shadow query normal offset scaled by shadow texel size. Motphys-only extension. |
 
 ## default/mesh
 
@@ -202,6 +204,10 @@ This block documents the defaults context for `asset/material`. The element sema
 | `reflectance` | `real` | yes | `0.0` | This attribute should be in the range [0 1]. It controls the specular  reflectance of the material in the built-in physically-based renderer:  the larger the value, the stronger the reflection. Unlike a planar  mirror, it is a per-material property and applies to every geom that  references this material, regardless of the geom shape. |
 | `metallic` | `real` | yes | `0.0` | This attribute corresponds to uniform metallicity coefficient applied to  the entire material, used by the built-in physically-based renderer. If a  non-negative value is specified, this metallic value should be multiplied by the  metallic texture sampled value to obtain the final metallicity of the material. |
 | `roughness` | `real` | yes | `0.0` | This attribute corresponds to uniform roughness coefficient applied to  the entire material, used by the built-in physically-based renderer. If a  non-negative value is specified, this roughness value should be multiplied by the  roughness texture sampled value to obtain the final roughness of the material. |
+| `ior` | `real` | yes | `1.0` | [MPEX] Index of refraction used by the physically-based renderer. |
+| `transmission` | `real` | yes | `0.0` | [MPEX] Transmission amount used by the physically-based renderer. |
+| `alpha_mode` | `string` | yes | `"opaque"` | [MPEX] Alpha blending or masking mode used by the renderer. The mask mode  uses the alpha cutoff 0.35 and treats the rgba alpha channel as 1. Choice: `opaque`, `mask`, `blend`, `multiply`. |
+| `both_side` | `bool` | yes | `false` | [MPEX] Whether geometries using this material render both front and back faces. |
 | `emission` | `real(4)` | yes | `"0. 0. 0. 0."` | Emissive color of the material in RGBA format. The emissive contribution  is this color scaled by the emissionintensity attribute. Use  emissionintensity to control the overall strength of the emission. |
 | `emissionintensity` | `real` | yes | `0.0` | [MPEX] Emission intensity multiplier applied on top of the emission color. |
 | `detailpara` | `real(4)` | yes | `"1. 1. 1. 1."` | [MPEX] Detail normal map parameters packed as four  floats: x = detail normal map u scale, y = detail normal map v scale,  z = normal strength, w = padding. |
@@ -296,9 +302,10 @@ This block documents the defaults context for `actuator/position`. The element s
 | `tendon` | `string` | no | — | If specified, the actuator acts on the given tendon. The actuator length equals  the tendon length times the gear ratio. Both spatial and fixed tendons can be  used. |
 | `kp` | `real` | yes | `1.0` | Position feedback gain. Used internally as gainprm[0] and also negated into  biasprm[1] to produce a restoring force proportional to position error. |
 | `kv` | `real` | no | — | Damping applied by the actuator. Used internally as biasprm[2] (negated) to produce  a force proportional to velocity. When using this attribute, it is recommended to use  the implicitfast or implicit integrators. This explicit damping value is exclusive with  dampratio. |
-| `dampratio` | `real` | no | — | Damping ratio of the position actuator. When specified, the actual damping is computed  at runtime from the current joint inertia as  `2 * dampratio * sqrt(kp * mass / gear[0]^2)`. This attribute is exclusive with kv. |
+| `dampratio` | `real` | no | — | Damping ratio of the position actuator. When specified, the physical damping  coefficient is resolved at model-build time from the initial locked joint inertia as  `2 * dampratio * sqrt(kp * mass / gear[0]^2)`. This attribute is exclusive with kv. |
 | `inheritrange` | `real` | no | — | Automatically sets the actuator's ctrlrange to match the transmission target's range.  A positive value X sets the ctrlrange around the midpoint of the target range, scaled  by X. For example if the target joint has range [0, 1], then a value of 1.0 will set  ctrlrange to [0, 1]; values of 0.8 and 1.2 will set the ctrlrange to [0.1, 0.9] and  [-0.1, 1.1], respectively. Values smaller than 1 are useful for not hitting the  limits; values larger than 1 are useful for maintaining control authority at the  limits. This attribute is exclusive with ctrlrange and available only for joint and  tendon transmissions which have range defined. |
 | `timeconst` | `real` | yes | `0.0` | Time-constant of optional first-order filter. If larger than 0, the actuator will use  the filterexact dynamics type, if 0 (the default), the actuator will use the none dynamics type. |
+| `implicit` | `bool` | yes | `false` | [MPEX] Whether position stiffness uses implicit integration. |
 
 ## default/velocity
 
@@ -382,10 +389,10 @@ This block documents the defaults context for `body/camera`. The element semanti
 | `axisangle` | `real(4)` | no | — | Orientation of the camera frame as an axis-angle pair.  → See [rotation representation](#rotation-attrs-axisangle). |
 | `xyaxes` | `real(6)` | no | — | Orientation of the camera frame via X and Y axes. Semantically convenient for cameras:  X and Y correspond to \"right\" and \"up\" in pixel space, respectively.  → See [rotation representation](#rotation-attrs-xyaxes). |
 | `zaxis` | `real(3)` | no | — | Orientation of the camera frame via Z axis direction.  → See [rotation representation](#rotation-attrs-zaxis). |
-| `resolution` | `real(2)` | yes | `"1 1"` |  |
+| `resolution` | `int(2)` | yes | `"1 1"` | Resolution of the camera in pixels [width height]. Following the official MJCF  convention, an absent attribute defaults to \"1 1\" via the fill getter. |
+| `output` | `string` | no | — | Types of output images supported by the camera, e.g. \"rgb\", \"depth\",  \"distance\", \"normal\", \"segmentation\". Multiple types can be listed, separated by  spaces. This attribute is a declaration of supported outputs rather than a render  instruction. |
 | `trackposspeed` | `real` | yes | `0.0` | [MPEX] Motphys-only extension. When not zero, the camera will move to target pose with this speed. |
 | `trackrotspeed` | `real` | yes | `0.0` | [MPEX] Motphys-only extension. When not zero, the camera will rotate to target pose with this  speed. |
-| `depth` | `bool` | yes | `false` | [MPEX] Motphys-only extension. When enabled, the camera renders depth information only. |
 | `znear` | `real` | yes | `0.0` | [MPEX] Motphys-only extension. The near clipping plane distance. If not specified, it will be  automatically computed. |
 | `zfar` | `real` | yes | `0.0` | [MPEX] Motphys-only extension. The far clipping plane distance. If not specified, it will be  automatically computed. |
 
@@ -418,6 +425,33 @@ This block documents the defaults context for `body/site`. The element semantics
 | `axisangle` | `real(4)` | no | — | Orientation of the site frame as an axis-angle pair.  → See [rotation representation](#rotation-attrs-axisangle). |
 | `xyaxes` | `real(6)` | no | — | Orientation of the site frame via X and Y axes.  → See [rotation representation](#rotation-attrs-xyaxes). |
 | `zaxes` | `real(3)` | no | — | Orientation of the site frame via Z axis direction.  → See [rotation representation](#rotation-attrs-zaxis). |
+
+## default/pair
+
+**Path**: `default/pair`
+**Tag**: `pair`
+**Parent**: `default`
+**Children**: none
+**Defaults Target**: `contact/pair`
+**Rust Type**: `model::contact::Pair`
+
+This block documents the defaults context for `contact/pair`. The element semantics and attributes are inherited from the defaults target.
+
+### Attributes
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `name` | `string` | no | — | Name of this contact pair. |
+| `class` | `string` | no | — | Defaults class for setting unspecified attributes. |
+| `geom1` | `string` | yes | `""""` | The name of the first geom in the pair. |
+| `geom2` | `string` | yes | `""""` | The name of the second geom in the pair. The contact force vector computed by the solver  points from the first towards the second geom by convention.  The forces applied to the system are of course equal and opposite, so the order of geoms  does not affect the physics. |
+| `condim` | `int` | yes | `3` | The dimensionality of the contacts generated by this geom pair. |
+| `friction` | `real(n)` | yes | `"1.0 1.0 0.005 0.0001 0.0001"` | The friction coefficients of the contacts generated by this geom pair. Making the first two  coefficients different results in anisotropic tangential friction. Making the last two  coefficients different results in anisotropic rolling friction. At most five components can  be authored. Missing prefix components are inherited from the selected class, parent  defaults or built-in defaults. The current runtime consumes the first tangential, torsional  and first rolling components as sliding, spinning and rolling coefficients, respectively.  The second tangential and second rolling components are currently preserved but not  consumed. |
+| `solref` | `real(2)` | yes | `"0.02 1.0"` | Solver reference parameters for contact simulation. Exactly two values must be authored.  → See [solver parameters](#solver-attrs-solref). |
+| `solimp` | `real(5)` | yes | `"0.9 0.95 0.001 0.5 2.0"` | Solver impedance parameters for contact simulation. Exactly five values must be authored. |
+| `solreffriction` | `real(2)` | yes | `"0.0 0.0"` | Solver reference parameters for friction dimensions. Exactly two values must be authored.  In MJCF, this attribute has the same semantics as other solref attributes, with two  important distinctions: the default value of \"0 0\" means \"use the same values as  solref\", and this attribute only takes effect for elliptic friction cones, since  pyramidal cones mix normal and frictional forces.  → See [solver parameters](#solver-attrs-solref).  MotrixSim currently compiles \"0 0\" as no independent friction model and preserves non-zero  values as an independent model, but the pyramidal-friction runtime does not consume either  form. |
+| `margin` | `real` | yes | `0.0` | Distance threshold below which contacts are detected and included in the global array  the contact data. |
+| `gap` | `real` | yes | `0.0` | Used to enable the generation of inactive contacts, i.e., contacts that are ignored by the  constraint solver but are included in the contact data for the purpose of custom  computations. When this value is positive, geom distances between margin and margin-gap  correspond to such inactive contacts. |
 
 ## default/tendon
 

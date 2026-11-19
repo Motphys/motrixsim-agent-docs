@@ -202,10 +202,10 @@ Note
 | `axisangle` | `real(4)` | no | — | Orientation of the camera frame as an axis-angle pair.  → See [rotation representation](#rotation-attrs-axisangle). |
 | `xyaxes` | `real(6)` | no | — | Orientation of the camera frame via X and Y axes. Semantically convenient for cameras:  X and Y correspond to \"right\" and \"up\" in pixel space, respectively.  → See [rotation representation](#rotation-attrs-xyaxes). |
 | `zaxis` | `real(3)` | no | — | Orientation of the camera frame via Z axis direction.  → See [rotation representation](#rotation-attrs-zaxis). |
-| `resolution` | `real(2)` | yes | `"1 1"` |  |
+| `resolution` | `int(2)` | yes | `"1 1"` | Resolution of the camera in pixels [width height]. Following the official MJCF  convention, an absent attribute defaults to \"1 1\" via the fill getter. |
+| `output` | `string` | no | — | Types of output images supported by the camera, e.g. \"rgb\", \"depth\",  \"distance\", \"normal\", \"segmentation\". Multiple types can be listed, separated by  spaces. This attribute is a declaration of supported outputs rather than a render  instruction. |
 | `trackposspeed` | `real` | yes | `0.0` | [MPEX] Motphys-only extension. When not zero, the camera will move to target pose with this speed. |
 | `trackrotspeed` | `real` | yes | `0.0` | [MPEX] Motphys-only extension. When not zero, the camera will rotate to target pose with this  speed. |
-| `depth` | `bool` | yes | `false` | [MPEX] Motphys-only extension. When enabled, the camera renders depth information only. |
 | `znear` | `real` | yes | `0.0` | [MPEX] Motphys-only extension. The near clipping plane distance. If not specified, it will be  automatically computed. |
 | `zfar` | `real` | yes | `0.0` | [MPEX] Motphys-only extension. The far clipping plane distance. If not specified, it will be  automatically computed. |
 
@@ -369,8 +369,10 @@ Note
 | `ambient` | `real(3)` | yes | `"0.0 0.0 0.0"` | The ambient color of the light, used by the default Phong lighting model. |
 | `diffuse` | `real(3)` | yes | `"0.7 0.7 0.7"` | The color of the light. For the Phong (default) lighting model, this defines the diffuse  color of the light. |
 | `specular` | `real(3)` | yes | `"0.3 0.3 0.3"` | The specular color of the light, used by the default Phong lighting model. |
-| `innerangle` | `real` | yes | `35.0` | ----------Motphys Only----------  Cutoff angle for spotlights in degrees as inner angle. Motphys-only extension. |
-| `nearz` | `real` | yes | `0.1` | The distance from the light to the near Z plane in the shadow map. Motphys-only extension. |
+| `innerangle` | `real` | yes | `35.0` | [MPEX] ----------Motphys Only----------  Cutoff angle for spotlights in degrees as inner angle. Motphys-only extension. |
+| `nearz` | `real` | yes | `0.1` | [MPEX] The distance from the light to the near Z plane in the shadow map. Motphys-only extension. |
+| `depthbias` | `real` | no | — | [MPEX] Shadow query offset toward the light in world units. Motphys-only extension. |
+| `normalbias` | `real` | no | — | [MPEX] Shadow query normal offset scaled by shadow texel size. Motphys-only extension. |
 
 ## body/replicate
 

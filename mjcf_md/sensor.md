@@ -3,7 +3,7 @@
 **Path**: `sensor`
 **Tag**: `sensor`
 **Parent**: `mujoco`
-**Children**: `sensor/touch`, `sensor/accelerometer`, `sensor/velocimeter`, `sensor/gyro`, `sensor/force`, `sensor/torque`, `sensor/jointpos`, `sensor/jointvel`, `sensor/jointactuatorfrc`, `sensor/ballquat`, `sensor/ballangvel`, `sensor/jointlimitpos`, `sensor/jointlimitvel`, `sensor/jointlimitfrc`, `sensor/tendonpos`, `sensor/tendonvel`, `sensor/tendonlimitpos`, `sensor/tendonlimitvel`, `sensor/tendonlimitfrc`, `sensor/actuatorpos`, `sensor/actuatorvel`, `sensor/actuatorfrc`, `sensor/framepos`, `sensor/framequat`, `sensor/framexaxis`, `sensor/frameyaxis`, `sensor/framezaxis`, `sensor/framelinvel`, `sensor/frameangvel`, `sensor/framelinacc`, `sensor/frameangacc`, `sensor/subtreecom`, `sensor/subtreelinvel`, `sensor/subtreeangmom`, `sensor/distance`, `sensor/normal`, `sensor/fromto`, `sensor/contact`, `sensor/lidar`
+**Children**: `sensor/touch`, `sensor/accelerometer`, `sensor/velocimeter`, `sensor/gyro`, `sensor/force`, `sensor/torque`, `sensor/jointpos`, `sensor/jointvel`, `sensor/jointactuatorfrc`, `sensor/ballquat`, `sensor/ballangvel`, `sensor/jointlimitpos`, `sensor/jointlimitvel`, `sensor/jointlimitfrc`, `sensor/tendonpos`, `sensor/tendonvel`, `sensor/tendonlimitpos`, `sensor/tendonlimitvel`, `sensor/tendonlimitfrc`, `sensor/actuatorpos`, `sensor/actuatorvel`, `sensor/actuatorfrc`, `sensor/framepos`, `sensor/framequat`, `sensor/framexaxis`, `sensor/frameyaxis`, `sensor/framezaxis`, `sensor/framelinvel`, `sensor/frameangvel`, `sensor/framelinacc`, `sensor/frameangacc`, `sensor/subtreecom`, `sensor/subtreelinvel`, `sensor/subtreeangmom`, `sensor/distance`, `sensor/normal`, `sensor/fromto`, `sensor/contact`, `sensor/lidar`, `sensor/raycastcamera`
 **Rust Type**: `model::sensor::sensor_set::SensorSet`
 
 This element is a grouping element for sensors.
@@ -30,7 +30,7 @@ Common sensor data for sensors that attach to a site.
 | `name` | `string` | no | — | Name of the sensor. |
 | `noise` | `real` | yes | `0.0` | The standard deviation of zero-mean Gaussian noise added to the sensor output. Noise  is added in the same units as the sensor output. |
 | `cutoff` | `real` | yes | `0.0` | The cutoff value for the sensor output. If the sensor output exceeds this value in  absolute terms, it is clipped to this value. |
-| `user` | `real(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
+| `user` | `int(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
 
 ## sensor/accelerometer
 
@@ -54,7 +54,7 @@ Common sensor data for sensors that attach to a site.
 | `name` | `string` | no | — | Name of the sensor. |
 | `noise` | `real` | yes | `0.0` | The standard deviation of zero-mean Gaussian noise added to the sensor output. Noise  is added in the same units as the sensor output. |
 | `cutoff` | `real` | yes | `0.0` | The cutoff value for the sensor output. If the sensor output exceeds this value in  absolute terms, it is clipped to this value. |
-| `user` | `real(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
+| `user` | `int(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
 
 ## sensor/velocimeter
 
@@ -78,7 +78,7 @@ Common sensor data for sensors that attach to a site.
 | `name` | `string` | no | — | Name of the sensor. |
 | `noise` | `real` | yes | `0.0` | The standard deviation of zero-mean Gaussian noise added to the sensor output. Noise  is added in the same units as the sensor output. |
 | `cutoff` | `real` | yes | `0.0` | The cutoff value for the sensor output. If the sensor output exceeds this value in  absolute terms, it is clipped to this value. |
-| `user` | `real(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
+| `user` | `int(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
 
 ## sensor/gyro
 
@@ -102,7 +102,7 @@ Common sensor data for sensors that attach to a site.
 | `name` | `string` | no | — | Name of the sensor. |
 | `noise` | `real` | yes | `0.0` | The standard deviation of zero-mean Gaussian noise added to the sensor output. Noise  is added in the same units as the sensor output. |
 | `cutoff` | `real` | yes | `0.0` | The cutoff value for the sensor output. If the sensor output exceeds this value in  absolute terms, it is clipped to this value. |
-| `user` | `real(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
+| `user` | `int(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
 
 ## sensor/jointpos
 
@@ -127,7 +127,7 @@ Common sensor data for sensors that attach to a scalar joint.
 | `name` | `string` | no | — | Name of the sensor. |
 | `noise` | `real` | yes | `0.0` | The standard deviation of zero-mean Gaussian noise added to the sensor output. Noise  is added in the same units as the sensor output. |
 | `cutoff` | `real` | yes | `0.0` | The cutoff value for the sensor output. If the sensor output exceeds this value in  absolute terms, it is clipped to this value. |
-| `user` | `real(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
+| `user` | `int(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
 
 ## sensor/jointvel
 
@@ -152,7 +152,7 @@ Common sensor data for sensors that attach to a scalar joint.
 | `name` | `string` | no | — | Name of the sensor. |
 | `noise` | `real` | yes | `0.0` | The standard deviation of zero-mean Gaussian noise added to the sensor output. Noise  is added in the same units as the sensor output. |
 | `cutoff` | `real` | yes | `0.0` | The cutoff value for the sensor output. If the sensor output exceeds this value in  absolute terms, it is clipped to this value. |
-| `user` | `real(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
+| `user` | `int(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
 
 ## sensor/framepos
 
@@ -186,7 +186,7 @@ Note
 | `name` | `string` | no | — | Name of the sensor. |
 | `noise` | `real` | yes | `0.0` | The standard deviation of zero-mean Gaussian noise added to the sensor output. Noise  is added in the same units as the sensor output. |
 | `cutoff` | `real` | yes | `0.0` | The cutoff value for the sensor output. If the sensor output exceeds this value in  absolute terms, it is clipped to this value. |
-| `user` | `real(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
+| `user` | `int(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
 
 ## sensor/framequat
 
@@ -220,7 +220,7 @@ Note
 | `name` | `string` | no | — | Name of the sensor. |
 | `noise` | `real` | yes | `0.0` | The standard deviation of zero-mean Gaussian noise added to the sensor output. Noise  is added in the same units as the sensor output. |
 | `cutoff` | `real` | yes | `0.0` | The cutoff value for the sensor output. If the sensor output exceeds this value in  absolute terms, it is clipped to this value. |
-| `user` | `real(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
+| `user` | `int(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
 
 ## sensor/framexaxis
 
@@ -254,7 +254,7 @@ Note
 | `name` | `string` | no | — | Name of the sensor. |
 | `noise` | `real` | yes | `0.0` | The standard deviation of zero-mean Gaussian noise added to the sensor output. Noise  is added in the same units as the sensor output. |
 | `cutoff` | `real` | yes | `0.0` | The cutoff value for the sensor output. If the sensor output exceeds this value in  absolute terms, it is clipped to this value. |
-| `user` | `real(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
+| `user` | `int(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
 
 ## sensor/frameyaxis
 
@@ -288,7 +288,7 @@ Note
 | `name` | `string` | no | — | Name of the sensor. |
 | `noise` | `real` | yes | `0.0` | The standard deviation of zero-mean Gaussian noise added to the sensor output. Noise  is added in the same units as the sensor output. |
 | `cutoff` | `real` | yes | `0.0` | The cutoff value for the sensor output. If the sensor output exceeds this value in  absolute terms, it is clipped to this value. |
-| `user` | `real(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
+| `user` | `int(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
 
 ## sensor/framezaxis
 
@@ -322,7 +322,7 @@ Note
 | `name` | `string` | no | — | Name of the sensor. |
 | `noise` | `real` | yes | `0.0` | The standard deviation of zero-mean Gaussian noise added to the sensor output. Noise  is added in the same units as the sensor output. |
 | `cutoff` | `real` | yes | `0.0` | The cutoff value for the sensor output. If the sensor output exceeds this value in  absolute terms, it is clipped to this value. |
-| `user` | `real(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
+| `user` | `int(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
 
 ## sensor/framelinvel
 
@@ -356,7 +356,7 @@ Note
 | `name` | `string` | no | — | Name of the sensor. |
 | `noise` | `real` | yes | `0.0` | The standard deviation of zero-mean Gaussian noise added to the sensor output. Noise  is added in the same units as the sensor output. |
 | `cutoff` | `real` | yes | `0.0` | The cutoff value for the sensor output. If the sensor output exceeds this value in  absolute terms, it is clipped to this value. |
-| `user` | `real(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
+| `user` | `int(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
 
 ## sensor/frameangvel
 
@@ -390,7 +390,7 @@ Note
 | `name` | `string` | no | — | Name of the sensor. |
 | `noise` | `real` | yes | `0.0` | The standard deviation of zero-mean Gaussian noise added to the sensor output. Noise  is added in the same units as the sensor output. |
 | `cutoff` | `real` | yes | `0.0` | The cutoff value for the sensor output. If the sensor output exceeds this value in  absolute terms, it is clipped to this value. |
-| `user` | `real(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
+| `user` | `int(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
 
 ## sensor/subtreecom
 
@@ -414,7 +414,7 @@ Common sensor data for sensors that are rooted at a body.
 | `name` | `string` | no | — | Name of the sensor. |
 | `noise` | `real` | yes | `0.0` | The standard deviation of zero-mean Gaussian noise added to the sensor output. Noise  is added in the same units as the sensor output. |
 | `cutoff` | `real` | yes | `0.0` | The cutoff value for the sensor output. If the sensor output exceeds this value in  absolute terms, it is clipped to this value. |
-| `user` | `real(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
+| `user` | `int(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
 
 ## sensor/subtreelinvel
 
@@ -438,7 +438,7 @@ Common sensor data for sensors that are rooted at a body.
 | `name` | `string` | no | — | Name of the sensor. |
 | `noise` | `real` | yes | `0.0` | The standard deviation of zero-mean Gaussian noise added to the sensor output. Noise  is added in the same units as the sensor output. |
 | `cutoff` | `real` | yes | `0.0` | The cutoff value for the sensor output. If the sensor output exceeds this value in  absolute terms, it is clipped to this value. |
-| `user` | `real(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
+| `user` | `int(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
 
 ## sensor/subtreeangmom
 
@@ -462,7 +462,7 @@ Common sensor data for sensors that are rooted at a body.
 | `name` | `string` | no | — | Name of the sensor. |
 | `noise` | `real` | yes | `0.0` | The standard deviation of zero-mean Gaussian noise added to the sensor output. Noise  is added in the same units as the sensor output. |
 | `cutoff` | `real` | yes | `0.0` | The cutoff value for the sensor output. If the sensor output exceeds this value in  absolute terms, it is clipped to this value. |
-| `user` | `real(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
+| `user` | `int(n)` | yes | `""` | User-defined scalar data associated with the sensor. These values are not used by  the simulator and are passed through to the model without change. |
 
 ## sensor/contact
 
@@ -519,8 +519,8 @@ A multi-beam lidar sensor attached to a site.
 Note
 
  This is a MotrixSim extension to MJCF. Model and scan attributes are defined by the referenced
- `asset/lidar` profile; the sensor instance contains only identity, mounting, filtering, and
- runtime-adjustable scan rate.
+ `asset/lidar` profile; the sensor instance contains identity, mounting, filtering, output
+ fields, and scan rate. Output layout is static after model construction.
 
 ### Attributes
 
@@ -531,4 +531,39 @@ Note
 | `site` | `string` | yes | `""""` | [MPEX] The site whose local frame defines the ray origins and directions. This attribute is  required on sensor instances and is not supplied by `asset/lidar`. |
 | `exclude` | `string` | yes | `"parentbody"` | [MPEX] Self-filter policy for colliders belonging to the sensor's parent hierarchy. Choice: `none`, `parentbody`, `parentsubtree`. |
 | `hz` | `real` | no | — | [MPEX] Full-scan rate in hertz. If omitted, the complete pattern is sampled every physics step. |
+| `returns` | `string` | no | — | [MPEX] Space-separated selection of output fields: distance, point, time_offset, and normal.  Distance is required. Token order does not affect the output layout: each ray always writes  distance, point(x, y, z), time_offset, then normal(x, y, z), omitting unselected fields.  For example, \"normal distance\" produces distance followed by the three normal components. |
+
+## sensor/raycastcamera [MPEX]
+
+**Path**: `sensor/raycastcamera`
+**Tag**: `raycastcamera`
+**Parent**: `sensor`
+**Children**: none
+**Rust Type**: `model::sensor::raycast::SensorRaycastCamera`
+
+A pinhole or orthographic raycast camera mounted on a site.
+
+Note
+
+ MotrixSim extension, independent of rendering cameras and LiDAR profiles. Pixels are row-major;
+ local +X is right, +Y is down, and +Z is optical forward. Both projections use the complete site
+ transform. Near/far clip optical-axis depth. Projection-specific attributes cannot be mixed.
+
+### Attributes
+
+| Name | Type | Required | Default | Description |
+|------|------|----------|---------|-------------|
+| `name` | `string` | no | — | [MPEX] Name of the sensor. |
+| `site` | `string` | yes | `""""` | [MPEX] Mounting site defining the optical frame. |
+| `width` | `int` | yes | `1` | [MPEX] Number of pixel columns. |
+| `height` | `int` | yes | `1` | [MPEX] Number of pixel rows. |
+| `projection` | `string` | yes | `"pinhole"` | [MPEX] Camera projection determining the local ray geometry. Choice: `pinhole`, `orthographic`. |
+| `intrinsics` | `real(4)` | yes | `"1.0 1.0 0.5 0.5"` | [MPEX] Pinhole-only intrinsics in pixels, ordered fx, fy, cx, cy. |
+| `spacing` | `real(2)` | no | — | [MPEX] Orthographic-only positive spacing between adjacent pixel origins in x and y. |
+| `near` | `real` | yes | `0.0` | [MPEX] Minimum accepted optical-axis depth. |
+| `far` | `real` | yes | `100.0` | [MPEX] Maximum accepted optical-axis depth. |
+| `update_period` | `real` | yes | `0.0` | [MPEX] Snapshot period in simulation seconds; zero samples every physics step. |
+| `exclude` | `string` | yes | `"parentbody"` | [MPEX] Self-filter policy for the mounting body's hierarchy. Choice: `none`, `parentbody`, `parentsubtree`. |
+| `groups` | `int(n)` | no | — | [MPEX] Optional collision geom group whitelist with integer group IDs in 0..=255.  An empty list includes no collider; valid IDs need not be used by a geom. |
+| `returns` | `string` | no | — | [MPEX] Space-separated output set: depth, distance, point, normal.  At least one of depth or distance is required; field order is fixed independently of token  order. |
 

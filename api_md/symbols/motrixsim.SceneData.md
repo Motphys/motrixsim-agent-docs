@@ -108,7 +108,7 @@ Tuple[int]: The shape of the data.
 | `__getitem__` | `(self, index: Any) -> SceneData` | Args: |
 | `__new__` | `(cls, model: SceneModel, batch: Sequence[int] = []) -> SceneData` | Create a new SceneData object. |
 | `get` | `(self, index: Any) -> SceneData` | Get sub-data by index. Alias to `__getitem__` |
-| `reset` | `(self, model: SceneModel) -> None` | Reset the scene data with the given model. |
+| `reset` | `(self, model: SceneModel, dof_pos: Optional[numpy.typing.NDArray[numpy.float32] \| Sequence[numpy.float32]] = None, dof_vel: Optional[numpy.typing.NDArray[numpy.float32] \| Sequence[numpy.float32]] = None, forward_kinematic: bool = False, reset_overrides: bool = True) -> None` | Reset the scene data with the given model and optional DoF state. |
 | `set_dof_pos` | `(self, dof_pos: numpy.typing.NDArray[numpy.float32] \| Sequence[numpy.float32], model: SceneModel) -> None` | Set the dof position for the whole world data. |
 | `set_dof_vel` | `(self, dof_vel: numpy.typing.NDArray[numpy.float32] \| Sequence[numpy.float32]) -> None` | Set the dof velocity for the whole world data. |
 
@@ -156,15 +156,51 @@ Get sub-data by index. Alias to `__getitem__`
 ### reset
 
 ```python
-def reset(self, model: SceneModel) -> None
+def reset(self, model: SceneModel, dof_pos: Optional[numpy.typing.NDArray[numpy.float32] | Sequence[numpy.float32]] = None, dof_vel: Optional[numpy.typing.NDArray[numpy.float32] | Sequence[numpy.float32]] = None, forward_kinematic: bool = False, reset_overrides: bool = True) -> None
 ```
 
-Reset the scene data with the given model.
+Reset the scene data with the given model and optional DoF state.
 
-        Reinitializes all simulation state variables using the provided model.
+        Rewrites the inputs of the next simulation step: the DoF state (the provided buffers, or
+        the model's initial state when both are omitted) and the actuator controls (back to the
+        model defaults). Cached solver state (warm-start lambdas, actuator activations) and
+        derived outputs of the previous step (contact reports, sensor readings) are kept and are
+        recomputed by their next update.
+
+        Note:
+            Reset does not perform sensor measurements or clear cached readings. Old cached values
+            must not be used as observations of the new episode. LiDAR status immediately reports
+            ``ready=False`` for selected environments; ``scan_seq`` values are retained.
+            Any unfinished rolling scan is discarded, and the next physics step starts a new scan.
+            Repeated status queries do not trigger a measurement.
+
+            With ``forward_kinematic=True``, kinematic outputs, static LiDAR, and raycast camera
+            images are refreshed at the reset state without advancing simulation time. Without it,
+            camera images remain cached until the next step or forward kinematics captures a frame.
+            Rolling LiDAR is never sampled by forward kinematics: it remains ``ready=False`` until
+            physics steps complete a new full scan according to its configured ``hz``.
+            Indexed data resets and refreshes only the selected environments.
 
         Args:
             model: The scene model to reset the data with.
+            dof_pos: Full-world DoF positions. Shape is
+                ``(*data.shape, num_dof_pos)`` with one slice per world, or ``(num_dof_pos,)`` to
+                broadcast the same positions to every world.
+            dof_vel: Full-world DoF velocities. Shape is
+                ``(*data.shape, num_dof_vel)`` with one slice per world, or ``(num_dof_vel,)`` to
+                broadcast the same velocities to every world. The broadcast mode of ``dof_vel`` is
+                independent of ``dof_pos``.
+            forward_kinematic: Whether to run forward kinematics after applying
+                the DoF state. Defaults to ``False`` for compatibility with the legacy reset API.
+            reset_overrides: Whether to restore the Data-side override buffers
+                (inertias, physics materials, joint armatures, friction losses, and geom shape
+                overrides) to the Model defaults. Defaults to ``True``. Pass ``False`` to keep
+                per-instance randomized overrides across the reset.
+
+        Raises:
+            RuntimeError: If the provided model is different from the model that owns this data.
+            ValueError: If only one DoF buffer is provided, a batch dimension length does not match
+                ``data.shape``, or either buffer has an invalid trailing shape.
 
 ### set_dof_pos
 
@@ -203,4 +239,6 @@ Set the dof velocity for the whole world data.
 
         Args:
             dof_vel: The dof velocity array to set. Shape: ``(*data.shape,
-        num_dof_vel)``.
+        num_dof_vel)``, or ``(num_dof_vel,)`` to broadcast the same velocities to every world.
+        Raises:
+            ValueError: When the dof velocity shape does not match the data.

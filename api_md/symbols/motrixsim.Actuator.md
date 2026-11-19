@@ -19,7 +19,6 @@ The base Actuator class provides access to common actuator properties and contro
 | Name | Type | Description |
 |------|------|-------------|
 | `ctrl_range` | `Optional[list[float]]` | Optional[Tuple[float, float]]: The control range of the actuator. |
-| `damping_type` | `DampingType` | The damping parameterization used by this actuator. |
 | `force_range` | `Optional[list[float]]` | Optional[Tuple[float, float]]: The force range of the actuator. |
 | `index` | `int` | The index of the actuator in the simulation world. |
 | `name` | `Optional[str]` | The name of the actuator. |
@@ -36,17 +35,6 @@ ctrl_range: Optional[list[float]]
 Optional[Tuple[float, float]]: The control range of the actuator.
 
     Returns None if not set.
-
-### damping_type
-
-```python
-damping_type: DampingType
-```
-
-The damping parameterization used by this actuator.
-
-    ``DampingType.Kv`` means absolute damping coefficient, and
-    ``DampingType.Dampratio`` means damping ratio relative to critical damping.
 
 ### force_range
 

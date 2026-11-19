@@ -45,6 +45,10 @@ This element creates a material asset. It can be referenced from
 | `reflectance` | `real` | yes | `0.0` | This attribute should be in the range [0 1]. It controls the specular  reflectance of the material in the built-in physically-based renderer:  the larger the value, the stronger the reflection. Unlike a planar  mirror, it is a per-material property and applies to every geom that  references this material, regardless of the geom shape. |
 | `metallic` | `real` | yes | `0.0` | This attribute corresponds to uniform metallicity coefficient applied to  the entire material, used by the built-in physically-based renderer. If a  non-negative value is specified, this metallic value should be multiplied by the  metallic texture sampled value to obtain the final metallicity of the material. |
 | `roughness` | `real` | yes | `0.0` | This attribute corresponds to uniform roughness coefficient applied to  the entire material, used by the built-in physically-based renderer. If a  non-negative value is specified, this roughness value should be multiplied by the  roughness texture sampled value to obtain the final roughness of the material. |
+| `ior` | `real` | yes | `1.0` | [MPEX] Index of refraction used by the physically-based renderer. |
+| `transmission` | `real` | yes | `0.0` | [MPEX] Transmission amount used by the physically-based renderer. |
+| `alpha_mode` | `string` | yes | `"opaque"` | [MPEX] Alpha blending or masking mode used by the renderer. The mask mode  uses the alpha cutoff 0.35 and treats the rgba alpha channel as 1. Choice: `opaque`, `mask`, `blend`, `multiply`. |
+| `both_side` | `bool` | yes | `false` | [MPEX] Whether geometries using this material render both front and back faces. |
 | `emission` | `real(4)` | yes | `"0. 0. 0. 0."` | Emissive color of the material in RGBA format. The emissive contribution  is this color scaled by the emissionintensity attribute. Use  emissionintensity to control the overall strength of the emission. |
 | `emissionintensity` | `real` | yes | `0.0` | [MPEX] Emission intensity multiplier applied on top of the emission color. |
 | `detailpara` | `real(4)` | yes | `"1. 1. 1. 1."` | [MPEX] Detail normal map parameters packed as four  floats: x = detail normal map u scale, y = detail normal map v scale,  z = normal strength, w = padding. |
@@ -152,7 +156,7 @@ Note
 | `mark` | `string` | no | — | Procedural textures can be marked with the markrgb color, on top of the  colors determined by the builtin type. \"edge\" means that the edges of  all texture images are marked. \"cross\" means that a cross is marked in  the middle of each image. \"random\" means that randomly chosen pixels are  marked. All markings are one-pixel wide. Choice: `none`, `edge`, `cross`, `random`. |
 | `markrgb` | `real(3)` | no | — | The color used for procedural texture markings. |
 | `nchannel` | `int` | yes | `3` | The number of channels in the texture image file. This allows loading  4-channel textures (RGBA) or single-channel textures (e.g., for  Physics-Based Rendering properties such as roughness or metallic). |
-| `gridsize` | `real(2)` | no | — |  |
+| `gridsize` | `int(2)` | no | — |  |
 | `gridlayout` | `string` | no | — |  |
 
 ## asset/hfield

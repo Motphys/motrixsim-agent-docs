@@ -33,6 +33,7 @@ The SceneModel object represents the entire simulation world.
 | `link_names` | `list[Optional[str]]` | List[Optional[str]]: The list of all link names in the world. |
 | `links` | `list[Link]` | List[Link]: The list of all links in the world. |
 | `low` | `LowSceneModel` | The low-level model for advanced or internal simulation access. |
+| `mesh_variant_sets` | `dict[str, list[str]]` | Compiled mesh variant sets keyed by their declared name. |
 | `num_actuators` | `int` | The number of actuators in the world. |
 | `num_bodies` | `int` | The number of bodies in the world. |
 | `num_dof_pos` | `int` | The number of DoF positions in the world. |
@@ -46,6 +47,7 @@ The SceneModel object represents the entire simulation world.
 | `num_sites` | `int` | The number of sites in the world. |
 | `options` | `Options` | The simulation options of the model. |
 | `reports` | `ReportFlags` | Toggles for runtime report generation. |
+| `sensors` | `SensorCollection` | Read-only compiled sensor descriptors in model order. |
 | `site_names` | `list[str]` | List[str]: The list of all site names in the world. |
 | `sites` | `list[Site]` | List[Site]: The list of all sites in the world. |
 
@@ -260,6 +262,20 @@ The low-level model for advanced or internal simulation access.
     Note:
         Do not use this property unless you know what you are doing.
 
+### mesh_variant_sets
+
+```python
+mesh_variant_sets: dict[str, list[str]]
+```
+
+Compiled mesh variant sets keyed by their declared name.
+
+    Returns:
+        Dict[str, List[str]]: Set name to the ordered mesh asset names declared in that set.
+            The position of a name in the list is the set-local variant ordinal accepted by
+            ``Geom.set_shape_override`` (``Shape.Mesh`` rows) and reported by
+            ``Geom.get_mesh_variant_override``.
+
 ### num_actuators
 
 ```python
@@ -374,6 +390,14 @@ reports: ReportFlags
 
 Toggles for runtime report generation.
 
+### sensors
+
+```python
+sensors: SensorCollection
+```
+
+Read-only compiled sensor descriptors in model order.
+
 ### site_names
 
 ```python
@@ -394,6 +418,8 @@ List[Site]: The list of all sites in the world.
 
 | Name | Signature | Description |
 |------|-----------|-------------|
+| `compile_query` | `(self, fields: Any) -> QueryPlan` | Compile a reusable model-bound physics data query plan. |
+| `compile_write` | `(self, fields: Any, *, reset: bool = False, reset_overrides: bool = True, forward_kinematic: bool = False) -> WritePlan` | Compile a reusable model-bound physics data write plan. |
 | `compute_init_dof_pos` | `(self) -> numpy.typing.NDArray[numpy.float32]` | Compute the initial DoF positions for the world. |
 | `forward_kinematic` | `(self, data: SceneData) -> None` | Perform forward kinematic calculations using the current model and data. |
 | `get_actuator` | `(self, arg: Any) -> Optional[Actuator]` | Get an actuator by name or index. |
@@ -410,6 +436,7 @@ List[Site]: The list of all sites in the world.
 | `get_hfield_index` | `(self, name: str) -> Optional[int]` | Get hfield index by its name. |
 | `get_joint` | `(self, key: Any) -> Optional[Joint]` | Get a joint by name or index. |
 | `get_joint_index` | `(self, name: str) -> Optional[int]` | Get the joint index by its name. |
+| `get_lidar_status` | `(self, id: str, data: SceneData) -> LidarScanStatus` | Get measurement status for a LiDAR sensor. |
 | `get_link` | `(self, arg: Any) -> Optional[Link]` | Get a link by name or index. |
 | `get_link_angular_velocities` | `(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]` | Get the world angular velocities of all links. |
 | `get_link_index` | `(self, name: str) -> Optional[int]` | Get the link index by its name. |
@@ -417,15 +444,77 @@ List[Site]: The list of all sites in the world.
 | `get_link_net_contact_forces` | `(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]` | Get the net contact force acting on each link, resolved at the link center of mass. |
 | `get_link_poses` | `(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]` | Get the world poses of all links. |
 | `get_link_rotation_mats` | `(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]` | Get all link rotation matrices. |
-| `get_link_states` | `(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]` | Get the full world states (pose and velocity) of links in a single call. |
+| `get_link_states` | `(self, data: SceneData, indices: Optional[Sequence[int]] = None, quat_order: str = 'xyzw', out_pos: Optional[numpy.typing.NDArray[numpy.float32]] = None, out_quat: Optional[numpy.typing.NDArray[numpy.float32]] = None, out_linvel: Optional[numpy.typing.NDArray[numpy.float32]] = None, out_angvel: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> tuple[numpy.typing.NDArray[numpy.float32], numpy.typing.NDArray[numpy.float32], numpy.typing.NDArray[numpy.float32], numpy.typing.NDArray[numpy.float32]]` | Get the world states (pose and velocity) of links in a single call. |
 | `get_link_velocities` | `(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]` | Get the world velocities (linear and angular) of all links. |
-| `get_sensor_value` | `(self, id: str, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the value of a specific sensor by its ID. |
+| `get_sensor_value` | `(self, id: str, data: SceneData, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]` | Get the value of a specific sensor by its ID. |
 | `get_sensor_values` | `(self, names: Sequence[str], data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the values of multiple sensors by their names, concatenated into a single array. |
 | `get_site` | `(self, key: Any) -> Optional[Site]` | Get a site by name or index. |
 | `get_site_index` | `(self, name: str) -> Optional[int]` | Get site index by name. |
+| `raycast_closest` | `(self, data: SceneData, origin: numpy.typing.NDArray[numpy.float32] \| Sequence[numpy.float32], direction: numpy.typing.NDArray[numpy.float32] \| Sequence[numpy.float32], max_distance: float, *, out: Optional[tuple[numpy.typing.NDArray[numpy.float32], numpy.typing.NDArray[numpy.float32], numpy.typing.NDArray[numpy.int64]]] = None) -> tuple[numpy.typing.NDArray[numpy.float32], numpy.typing.NDArray[numpy.float32], numpy.typing.NDArray[numpy.int64]]` | Cast one ray per scene instance and return the nearest hits. |
 | `set_gravity_override` | `(self, data: SceneData, gravity: numpy.typing.NDArray[numpy.float32] \| Sequence[numpy.float32]) -> None` | Override the gravity vector for the scene data. |
-| `step` | `(self, data: SceneData) -> None` | Advance the simulation by one step using the current model and data. |
-| `step_n` | `(self, data: SceneData, n: int) -> None` | Advance the simulation by `n` steps using the current model and data. |
+| `step` | `(self, data: SceneData, result: Optional[numpy.typing.NDArray[numpy.int32]] = None) -> None` | Advance the simulation by one step using the current model and data. |
+| `step_n` | `(self, data: SceneData, n: int, result: Optional[numpy.typing.NDArray[numpy.int32]] = None) -> None` | Advance the simulation by `n` steps using the current model and data. |
+
+### compile_query
+
+```python
+def compile_query(self, fields: Any) -> QueryPlan
+```
+
+Compile a reusable model-bound physics data query plan.
+
+        Args:
+            fields: Named fixed-width query sources. Mapping iteration
+                order determines the contiguous output buffer layout.
+
+        Returns:
+            QueryPlan: Compiled query plan whose names, indices, shapes, and offsets are resolved.
+
+        Raises:
+            TypeError: If fields is not a mapping of names to QuerySource objects.
+            ValueError: If a field name, link index, sensor name, or body name is invalid.
+
+### compile_write
+
+```python
+def compile_write(self, fields: Any, *, reset: bool = False, reset_overrides: bool = True, forward_kinematic: bool = False) -> WritePlan
+```
+
+Compile a reusable model-bound physics data write plan.
+
+        Args:
+            fields: Named fixed-width write sources. Mapping iteration
+                order determines the contiguous write buffer layout and the order in which the
+                writes are applied during execution.
+            reset: Whether every execution of programs allocated from this plan
+                first restores each selected world to the model initial state before applying the
+                writes. The reset also clears per-instance state not covered by the plan, such as
+                actuator kp/damping, link mass/center-of-mass, and geom friction overrides; those
+                are only restored if the plan writes them again. The initial state is built
+                lazily per execution, so no allocation happens while reset is False. Defaults to
+                False.
+            reset_overrides: Whether the plan-level reset also restores the
+                Data-side override buffers (inertias, physics materials, joint armatures,
+                friction losses, geom shape overrides) to the Model defaults. Ignored when
+                ``reset`` is False. Defaults to True; pass False to keep per-instance
+                randomized overrides across executions.
+            forward_kinematic: Whether every execution of programs allocated from
+                this plan runs forward kinematics after applying the writes. Defaults to False.
+
+        Note:
+            ``AddBodyLinearVelocity`` adds world-frame XYZ increments to the current floating-base
+            velocity DoF, or to the initial velocity after a plan-level reset. Its reusable buffer
+            is not cleared on execution. Set/add and add/add writes to the same linear velocity
+            channel are rejected at compile time.
+
+        Returns:
+            WritePlan: Compiled write plan whose names, indices, target types, and channels are
+                resolved; duplicate writes to the same underlying channel are rejected.
+
+        Raises:
+            TypeError: If fields is not a mapping of names to WriteSource objects.
+            ValueError: If a field name, target name, or target index is invalid, a target type
+                does not support the requested write, or two fields write the same channel.
 
 ### compute_init_dof_pos
 
@@ -447,8 +536,22 @@ def forward_kinematic(self, data: SceneData) -> None
 Perform forward kinematic calculations using the current model and data.
 
         Note:
-          This method only updates the world poses of all links and bodies based on the current
-          joint positions.
+            Updates kinematic outputs without advancing simulation time or changing DoF positions
+            and velocities. Measurements that require a physics step are not updated.
+
+            Static LiDAR refreshes on every call. Raycast cameras capture only when no valid frame
+            exists after initialization or reset. Once an image exists, repeated calls keep that
+            image and do not bypass ``update_period``. Changing DoF positions directly does not
+            invalidate the cached image, so it may not match the current pose.
+
+            Rolling LiDAR is not measured by this method. After reset, ``get_lidar_status()``
+            reports ``ready=False`` until physics steps complete a full new scan according to
+            ``hz``. Cached pre-reset readings may remain available but are not valid observations
+            of the new episode. Without reset, an unfinished scan continues on subsequent steps.
+            Indexed data updates only the selected environments.
+
+        Raises:
+            RuntimeError: If the scene data belongs to a different model.
 
 ### get_actuator
 
@@ -644,6 +747,30 @@ Get the joint index by its name.
         Returns:
             Optional[int]: Index of the joint, or `None` if not found.
 
+### get_lidar_status
+
+```python
+def get_lidar_status(self, id: str, data: SceneData) -> LidarScanStatus
+```
+
+Get measurement status for a LiDAR sensor.
+
+        Args:
+            id: LiDAR sensor name.
+            data: Scene data, optionally batched or indexed.
+
+        Returns:
+            LidarScanStatus: Boolean ready and uint64 scan_seq arrays with data.shape.
+
+        Note:
+            Sensor payload remains available only through get_sensor_value(). Unknown names
+            and non-LiDAR sensors raise RuntimeError. Fresh SceneData starts with ready=False and
+            scan_seq=0. SceneData.reset() retains cached outputs but immediately makes ready=False
+            for selected environments; sequence numbers remain monotonic. Forward kinematics
+            refreshes static LiDAR, but does not measure rolling LiDAR. Rolling LiDAR becomes ready
+            only after physics steps complete a full new scan. Repeated status queries do not
+            trigger a measurement.
+
 ### get_link
 
 ```python
@@ -798,10 +925,10 @@ Get all link rotation matrices.
 ### get_link_states
 
 ```python
-def get_link_states(self, data: SceneData, indices: Optional[Sequence[int]] = None, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]
+def get_link_states(self, data: SceneData, indices: Optional[Sequence[int]] = None, quat_order: str = 'xyzw', out_pos: Optional[numpy.typing.NDArray[numpy.float32]] = None, out_quat: Optional[numpy.typing.NDArray[numpy.float32]] = None, out_linvel: Optional[numpy.typing.NDArray[numpy.float32]] = None, out_angvel: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> tuple[numpy.typing.NDArray[numpy.float32], numpy.typing.NDArray[numpy.float32], numpy.typing.NDArray[numpy.float32], numpy.typing.NDArray[numpy.float32]]
 ```
 
-Get the full world states (pose and velocity) of links in a single call.
+Get the world states (pose and velocity) of links in a single call.
 
         Args:
             data: Scene data.
@@ -810,15 +937,34 @@ Get the full world states (pose and velocity) of links in a single call.
                 links are returned in order. Otherwise only the selected links are returned, in the
                 given order, and ``N`` below equals ``len(indices)``.
 
-            out: Pre-allocated output array of shape
-                `(*data.shape, N, 13)`. When provided, results are written into this array
-                and it is returned directly, avoiding a per-call allocation.
+            quat_order: Component order of the returned quaternions, either ``"xyzw"``
+                (default) or ``"wxyz"``.
+
+            out_pos: Pre-allocated output array of shape
+                `(*data.shape, N, 3)` for positions. When provided, results are written into this
+                array and it is returned directly, avoiding a per-call allocation.
+
+            out_quat: Pre-allocated output array of shape
+                `(*data.shape, N, 4)` for rotation quaternions, in ``quat_order`` component order.
+                When provided, results are written into this array and it is returned directly,
+                avoiding a per-call allocation.
+
+            out_linvel: Pre-allocated output array of shape
+                `(*data.shape, N, 3)` for linear velocities. When provided, results are written
+                into this array and it is returned directly, avoiding a per-call allocation.
+
+            out_angvel: Pre-allocated output array of shape
+                `(*data.shape, N, 3)` for angular velocities. When provided, results are written
+                into this array and it is returned directly, avoiding a per-call allocation.
 
         Returns:
-            NDArray[float]: A numpy array with shape `(*data.shape, N, 13)`. Each row is composed
-            of `[x, y, z, i, j, k, w, vx, vy, vz, wx, wy, wz]`, i.e. position (3) + rotation
-            quaternion (4) + linear velocity (3) + angular velocity (3). The first 7 columns match
-            `get_link_poses` and the last 6 columns match `get_link_velocities`.
+            tuple[NDArray[float], NDArray[float], NDArray[float], NDArray[float]]: Four arrays
+            `(pos, quat, linvel, angvel)` with shapes `(*data.shape, N, 3)`, `(*data.shape, N, 4)`,
+            `(*data.shape, N, 3)` and `(*data.shape, N, 3)` respectively. Each position is
+            `[x, y, z]`, each quaternion uses the requested ``quat_order`` (default
+            `[qx, qy, qz, qw]`), each linear velocity is `[vx, vy, vz]` and each angular velocity is
+            `[wx, wy, wz]`. The position/quaternion parts match `get_link_poses` and the
+            velocity parts match `get_link_velocities`.
 
 ### get_link_velocities
 
@@ -846,7 +992,7 @@ Get the world velocities (linear and angular) of all links.
 ### get_sensor_value
 
 ```python
-def get_sensor_value(self, id: str, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
+def get_sensor_value(self, id: str, data: SceneData, out: Optional[numpy.typing.NDArray[numpy.float32]] = None) -> numpy.typing.NDArray[numpy.float32]
 ```
 
 Get the value of a specific sensor by its ID.
@@ -854,6 +1000,8 @@ Get the value of a specific sensor by its ID.
         Args:
             id: Sensor ID.
             data: Scene data.
+            out: Contiguous preallocated array with shape
+                ``(*data.shape, sensor_value_size)`` and the simulation scalar dtype.
 
         Returns:
             NDArray[float]: Sensor values. Shape: ``(*data.shape, sensor_value_size)``
@@ -903,6 +1051,50 @@ Get site index by name.
         Returns:
             Optional[int]: Index of the site, or `None` if not found.
 
+### raycast_closest
+
+```python
+def raycast_closest(self, data: SceneData, origin: numpy.typing.NDArray[numpy.float32] | Sequence[numpy.float32], direction: numpy.typing.NDArray[numpy.float32] | Sequence[numpy.float32], max_distance: float, *, out: Optional[tuple[numpy.typing.NDArray[numpy.float32], numpy.typing.NDArray[numpy.float32], numpy.typing.NDArray[numpy.int64]]] = None) -> tuple[numpy.typing.NDArray[numpy.float32], numpy.typing.NDArray[numpy.float32], numpy.typing.NDArray[numpy.int64]]
+```
+
+Cast one ray per scene instance and return the nearest hits.
+
+        Args:
+            data: Scene state, optionally batched or a selected view.
+            origin: World-space origins with shape ``(3,)`` to broadcast,
+                or ``(*data.shape, 3)`` for per-instance origins.
+            direction: Finite, non-zero world-space directions with shape
+                ``(3,)`` to broadcast, or ``(*data.shape, 3)`` for per-instance directions.
+                Directions are normalized before querying.
+            max_distance: Positive finite maximum distance in meters, shared by all rays.
+            out: Pre-allocated distance, normal, and collider index arrays.
+                Shapes and dtypes must match the returned arrays. Outputs must be writable,
+                C-contiguous, and must not overlap each other or the inputs.
+                Results are written directly into them.
+
+        Returns:
+            tuple[NDArray[float], NDArray[float], NDArray[int]]: Distance, outward
+            normal, and collider index. Distance and index have shape
+            ``data.shape``; normals have shape ``(*data.shape, 3)``.
+            Non-batched scalar results are zero-dimensional arrays.
+            Misses contain ``inf``, zero normal, and index ``-1``.
+            A hit mask can be computed as ``collider_index >= 0``.
+            Collider indices use int64; distances and normals use the engine precision.
+            When out is provided, the same three array objects are returned.
+
+        Note:
+            Origin and direction broadcast independently and accept non-contiguous arrays.
+            Call ``motrixsim.low.enable_immediate_raycast(model)`` before preparing snapshots
+            with ``model.step(data)`` or ``model.forward_kinematic(data)``. After direct state
+            edits, explicitly refresh the state before querying. This method does not enable
+            snapshots or run forward kinematics. Empty batches do not require snapshots.
+            Inputs, outputs, and snapshots are validated before any output is written.
+
+        Raises:
+            TypeError: An output array has an incorrect dtype.
+            ValueError: Query values or output shape, layout, writability, or borrowing are invalid.
+            RuntimeError: The data belongs to a different model or a broadphase snapshot is missing.
+
 ### set_gravity_override
 
 ```python
@@ -923,18 +1115,34 @@ Override the gravity vector for the scene data.
 ### step
 
 ```python
-def step(self, data: SceneData) -> None
+def step(self, data: SceneData, result: Optional[numpy.typing.NDArray[numpy.int32]] = None) -> None
 ```
 
 Advance the simulation by one step using the current model and data.
 
+        Args:
+            data: Scene data.
+            result: Optional writable C-contiguous output with shape
+                ``data.shape``; use a zero-dimensional array for a single environment.
+
         Note:
-            If the data has batch dimension, motrixsim will run simulation in parallel
+            Status codes are 0 for success, 1 for LargeVelocity, 2 for NonFinite,
+            3 for NonPositiveDefinite, and 4 for SingularSystem.
+            Healthy instances continue even if another fails. Failure does not roll back state;
+            reset failed instances before reuse. The output is overwritten on every call.
+            With result=None, numerical failure raises RuntimeError after healthy instances finish.
+            With an output array, numerical failures only write status codes.
+
+        Raises:
+            RuntimeError: If data belongs to a different model, or a numerical failure occurs
+                without a result array.
+            TypeError: If result is not an int32 ndarray.
+            ValueError: If result has invalid shape, layout, writability, or borrowing.
 
 ### step_n
 
 ```python
-def step_n(self, data: SceneData, n: int) -> None
+def step_n(self, data: SceneData, n: int, result: Optional[numpy.typing.NDArray[numpy.int32]] = None) -> None
 ```
 
 Advance the simulation by `n` steps using the current model and data.
@@ -942,6 +1150,22 @@ Advance the simulation by `n` steps using the current model and data.
         Args:
             data: Scene data.
             n: Number of steps to advance the simulation.
+            result: Optional writable C-contiguous output with shape
+                ``data.shape``; use a zero-dimensional array for a single environment.
 
         Note:
-            This method can skip the python overhead when stepping multiple times.
+            Status codes are 0 for success, 1 for LargeVelocity, 2 for NonFinite,
+            3 for NonPositiveDefinite, and 4 for SingularSystem.
+            This method skips Python overhead between substeps. A failed instance stops its
+            remaining substeps; healthy instances continue. Failure does not roll back state;
+            reset failed instances before reuse. A zero-step call writes success without changing
+            state. The output is overwritten on every call.
+            With result=None, numerical failure raises RuntimeError after healthy instances finish.
+            With an output array, numerical failures only write status codes.
+
+        Raises:
+            RuntimeError: If data belongs to a different model, or a numerical failure occurs
+                without a result array.
+            TypeError: If result is not an int32 ndarray.
+            ValueError: If n exceeds u32::MAX, or result has invalid shape, layout,
+                writability, or borrowing.

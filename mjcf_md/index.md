@@ -11,7 +11,7 @@ Motrixsim 支持的 MJCF XML 元素参考。`Path` 是本文档的元素唯一�
   - [`asset`](./asset.md)
     - `asset/material`, `asset/mesh`, `asset/texture`, `asset/hfield`, `asset/gsplat` [PRO], `asset/model`, `asset/lidar` [MPEX]
   - [`default`](./default.md)
-    - `default/default`, `default/geom`, `default/joint`, `default/light`, `default/mesh`, `default/material`, `default/general`, `default/motor`, `default/position`, `default/velocity`, `default/adhesion`, `default/camera`, `default/site`, `default/tendon`, `default/equality`
+    - `default/default`, `default/geom`, `default/joint`, `default/light`, `default/mesh`, `default/material`, `default/general`, `default/motor`, `default/position`, `default/velocity`, `default/adhesion`, `default/camera`, `default/site`, `default/pair`, `default/tendon`, `default/equality`
   - [`body`](./body.md)
     - `body/inertial`, `body/joint`, `body/freejoint`, `body`, `body/attach`, `body/camera`, `body/frame`, `body/geom`, `body/gsplat` [PRO], `body/light`, `body/replicate`, `body/site`
   - [`option`](./option.md)
@@ -23,13 +23,13 @@ Motrixsim 支持的 MJCF XML 元素参考。`Path` 是本文档的元素唯一�
   - [`equality`](./equality.md)
     - `equality/connect`, `equality/joint`, `equality/weld`
   - [`contact`](./contact.md)
-    - `contact/exclude`, `contact/pair`
+    - `contact/pair`, `contact/exclude`
   - [`tendon`](./tendon.md)
     - `tendon/fixed`
   - [`custom`](./custom.md)
     - `custom/numeric`, `custom/text`
   - [`sensor`](./sensor.md)
-    - `sensor/touch`, `sensor/accelerometer`, `sensor/velocimeter`, `sensor/gyro`, `sensor/force`, `sensor/torque`, `sensor/jointpos`, `sensor/jointvel`, `sensor/jointactuatorfrc`, `sensor/ballquat`, `sensor/ballangvel`, `sensor/jointlimitpos`, `sensor/jointlimitvel`, `sensor/jointlimitfrc`, `sensor/tendonpos`, `sensor/tendonvel`, `sensor/tendonlimitpos`, `sensor/tendonlimitvel`, `sensor/tendonlimitfrc`, `sensor/actuatorpos`, `sensor/actuatorvel`, `sensor/actuatorfrc`, `sensor/framepos`, `sensor/framequat`, `sensor/framexaxis`, `sensor/frameyaxis`, `sensor/framezaxis`, `sensor/framelinvel`, `sensor/frameangvel`, `sensor/framelinacc`, `sensor/frameangacc`, `sensor/subtreecom`, `sensor/subtreelinvel`, `sensor/subtreeangmom`, `sensor/distance`, `sensor/normal`, `sensor/fromto`, `sensor/contact`, `sensor/lidar` [MPEX]
+    - `sensor/touch`, `sensor/accelerometer`, `sensor/velocimeter`, `sensor/gyro`, `sensor/force`, `sensor/torque`, `sensor/jointpos`, `sensor/jointvel`, `sensor/jointactuatorfrc`, `sensor/ballquat`, `sensor/ballangvel`, `sensor/jointlimitpos`, `sensor/jointlimitvel`, `sensor/jointlimitfrc`, `sensor/tendonpos`, `sensor/tendonvel`, `sensor/tendonlimitpos`, `sensor/tendonlimitvel`, `sensor/tendonlimitfrc`, `sensor/actuatorpos`, `sensor/actuatorvel`, `sensor/actuatorfrc`, `sensor/framepos`, `sensor/framequat`, `sensor/framexaxis`, `sensor/frameyaxis`, `sensor/framezaxis`, `sensor/framelinvel`, `sensor/frameangvel`, `sensor/framelinacc`, `sensor/frameangacc`, `sensor/subtreecom`, `sensor/subtreelinvel`, `sensor/subtreeangmom`, `sensor/distance`, `sensor/normal`, `sensor/fromto`, `sensor/contact`, `sensor/lidar` [MPEX], `sensor/raycastcamera` [MPEX]
   - [`statistic`](./statistic.md)
   - [`keyframe`](./keyframe.md)
     - `keyframe/key`
@@ -65,13 +65,13 @@ Motrixsim 支持的 MJCF XML 元素参考。`Path` 是本文档的元素唯一�
 | `body/replicate` | `replicate` | `body.md` | `body` | none |
 | `body/site` | `site` | `body.md` | `body` | none |
 | `compiler` | `compiler` | `compiler.md` | `mujoco` | none |
-| `contact` | `contact` | `contact.md` | `mujoco` | `contact/exclude`, `contact/pair` |
+| `contact` | `contact` | `contact.md` | `mujoco` | `contact/pair`, `contact/exclude` |
 | `contact/exclude` | `exclude` | `contact.md` | `contact` | none |
 | `contact/pair` | `pair` | `contact.md` | `contact` | none |
 | `custom` | `custom` | `custom.md` | `mujoco` | `custom/numeric`, `custom/text` |
 | `custom/numeric` | `numeric` | `custom.md` | `custom` | none |
 | `custom/text` | `text` | `custom.md` | `custom` | none |
-| `default` | `default` | `default.md` | `mujoco` | `default/default`, `default/geom`, `default/joint`, `default/light`, `default/mesh`, `default/material`, `default/general`, `default/motor`, `default/position`, `default/velocity`, `default/adhesion`, `default/camera`, `default/site`, `default/tendon`, `default/equality` |
+| `default` | `default` | `default.md` | `mujoco` | `default/default`, `default/geom`, `default/joint`, `default/light`, `default/mesh`, `default/material`, `default/general`, `default/motor`, `default/position`, `default/velocity`, `default/adhesion`, `default/camera`, `default/site`, `default/pair`, `default/tendon`, `default/equality` |
 | `default/adhesion` | `adhesion` | `default.md` | `default` | none |
 | `default/camera` | `camera` | `default.md` | `default` | none |
 | `default/default` | `default` | `default.md` | `default` | none |
@@ -83,6 +83,7 @@ Motrixsim 支持的 MJCF XML 元素参考。`Path` 是本文档的元素唯一�
 | `default/material` | `material` | `default.md` | `default` | none |
 | `default/mesh` | `mesh` | `default.md` | `default` | none |
 | `default/motor` | `motor` | `default.md` | `default` | none |
+| `default/pair` | `pair` | `default.md` | `default` | none |
 | `default/position` | `position` | `default.md` | `default` | none |
 | `default/site` | `site` | `default.md` | `default` | none |
 | `default/tendon` | `tendon` | `default.md` | `default` | none |
@@ -100,7 +101,7 @@ Motrixsim 支持的 MJCF XML 元素参考。`Path` 是本文档的元素唯一�
 | `mujoco` | `mujoco` | `index.md` | `none` | `extension`, `compiler`, `asset`, `default`, `body`, `option`, `actuator`, `visual`, `equality`, `contact`, `tendon`, `custom`, `sensor`, `statistic`, `keyframe` |
 | `option` | `option` | `option.md` | `mujoco` | `option/flag` |
 | `option/flag` | `flag` | `option.md` | `option` | none |
-| `sensor` | `sensor` | `sensor.md` | `mujoco` | `sensor/touch`, `sensor/accelerometer`, `sensor/velocimeter`, `sensor/gyro`, `sensor/force`, `sensor/torque`, `sensor/jointpos`, `sensor/jointvel`, `sensor/jointactuatorfrc`, `sensor/ballquat`, `sensor/ballangvel`, `sensor/jointlimitpos`, `sensor/jointlimitvel`, `sensor/jointlimitfrc`, `sensor/tendonpos`, `sensor/tendonvel`, `sensor/tendonlimitpos`, `sensor/tendonlimitvel`, `sensor/tendonlimitfrc`, `sensor/actuatorpos`, `sensor/actuatorvel`, `sensor/actuatorfrc`, `sensor/framepos`, `sensor/framequat`, `sensor/framexaxis`, `sensor/frameyaxis`, `sensor/framezaxis`, `sensor/framelinvel`, `sensor/frameangvel`, `sensor/framelinacc`, `sensor/frameangacc`, `sensor/subtreecom`, `sensor/subtreelinvel`, `sensor/subtreeangmom`, `sensor/distance`, `sensor/normal`, `sensor/fromto`, `sensor/contact`, `sensor/lidar` |
+| `sensor` | `sensor` | `sensor.md` | `mujoco` | `sensor/touch`, `sensor/accelerometer`, `sensor/velocimeter`, `sensor/gyro`, `sensor/force`, `sensor/torque`, `sensor/jointpos`, `sensor/jointvel`, `sensor/jointactuatorfrc`, `sensor/ballquat`, `sensor/ballangvel`, `sensor/jointlimitpos`, `sensor/jointlimitvel`, `sensor/jointlimitfrc`, `sensor/tendonpos`, `sensor/tendonvel`, `sensor/tendonlimitpos`, `sensor/tendonlimitvel`, `sensor/tendonlimitfrc`, `sensor/actuatorpos`, `sensor/actuatorvel`, `sensor/actuatorfrc`, `sensor/framepos`, `sensor/framequat`, `sensor/framexaxis`, `sensor/frameyaxis`, `sensor/framezaxis`, `sensor/framelinvel`, `sensor/frameangvel`, `sensor/framelinacc`, `sensor/frameangacc`, `sensor/subtreecom`, `sensor/subtreelinvel`, `sensor/subtreeangmom`, `sensor/distance`, `sensor/normal`, `sensor/fromto`, `sensor/contact`, `sensor/lidar`, `sensor/raycastcamera` |
 | `sensor/accelerometer` | `accelerometer` | `sensor.md` | `sensor` | none |
 | `sensor/contact` | `contact` | `sensor.md` | `sensor` | none |
 | `sensor/frameangvel` | `frameangvel` | `sensor.md` | `sensor` | none |
@@ -114,6 +115,7 @@ Motrixsim 支持的 MJCF XML 元素参考。`Path` 是本文档的元素唯一�
 | `sensor/jointpos` | `jointpos` | `sensor.md` | `sensor` | none |
 | `sensor/jointvel` | `jointvel` | `sensor.md` | `sensor` | none |
 | `sensor/lidar` | `lidar` | `sensor.md` | `sensor` | none |
+| `sensor/raycastcamera` | `raycastcamera` | `sensor.md` | `sensor` | none |
 | `sensor/subtreeangmom` | `subtreeangmom` | `sensor.md` | `sensor` | none |
 | `sensor/subtreecom` | `subtreecom` | `sensor.md` | `sensor` | none |
 | `sensor/subtreelinvel` | `subtreelinvel` | `sensor.md` | `sensor` | none |

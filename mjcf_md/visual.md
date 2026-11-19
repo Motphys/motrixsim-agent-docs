@@ -203,6 +203,7 @@ Screen-space global illumination (SSGI) settings.
 | `gidenoiseoffset` | `int` | yes | `0` | [MPEX] GI denoise pixel offset size, 0 mean no denoise. |
 | `rraycount` | `int` | yes | `0` | [MPEX] Amount of screen sample per reflection ray |
 | `rdenoiseoffset` | `int` | yes | `0` | [MPEX] Reflection denoise pixel offset size, 0 mean no denoise. |
+| `roughnessthreshold` | `real` | yes | `0.0` | [MPEX] Skip reflection raytrcaing when Roughness greater than roughness threshold default 0.3. |
 
 ## visual/tonemapping [MPEX]
 

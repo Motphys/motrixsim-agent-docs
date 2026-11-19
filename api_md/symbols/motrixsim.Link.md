@@ -160,6 +160,7 @@ The parent link of this link.
 | `add_external_torque` | `(self, data: SceneData, torque: numpy.typing.NDArray[numpy.float32] \| Sequence[numpy.float32], local: bool = True) -> None` | Add an external torque to the link. |
 | `get_angular_velocity` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the world angular velocity of the link. |
 | `get_center_of_mass_override` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the center of mass override of the link in the link local frame. |
+| `get_inertia_override` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the effective inertia tensor about the center of mass in the link local frame. |
 | `get_joint` | `(self, index: int) -> Optional[Joint]` | Get the joint at the specified index if the link has multiple joints. |
 | `get_linear_velocity` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the world linear velocity of the link. |
 | `get_mass_override` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the overrided mass of the link in the scene data. |
@@ -169,7 +170,9 @@ The parent link of this link.
 | `get_rotation_mat` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the world rotation matrix of the link. |
 | `joints` | `(self) -> list[Joint]` | The joints associated with this link. |
 | `set_center_of_mass_override` | `(self, data: SceneData, center_of_mass: numpy.typing.NDArray[numpy.float32] \| Sequence[numpy.float32]) -> None` | Override the center of mass of the link. |
+| `set_inertia_override` | `(self, data: SceneData, inertia: numpy.typing.NDArray[numpy.float32] \| Sequence[numpy.float32]) -> None` | Override the inertia tensor about the center of mass in the link local frame. |
 | `set_mass_override` | `(self, data: SceneData, mass: numpy.typing.NDArray[numpy.float32] \| Sequence[numpy.float32]) -> None` | Override the mass of the link. |
+| `set_principal_inertia_override` | `(self, data: SceneData, principal_moments: numpy.typing.NDArray[numpy.float32] \| Sequence[numpy.float32], principal_axes: numpy.typing.NDArray[numpy.float32] \| Sequence[numpy.float32]) -> None` | Override the rotational inertia tensor about the center of mass in the link local frame |
 
 ### add_external_force
 
@@ -236,6 +239,22 @@ Get the center of mass override of the link in the link local frame.
             data: The scene data to query.
         Returns:
            NDArray[float]: Shape: ``(*data.shape, 3)``. The center of mass override value.
+
+### get_inertia_override
+
+```python
+def get_inertia_override(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]
+```
+
+Get the effective inertia tensor about the center of mass in the link local frame.
+
+        Args:
+            data: The scene data to query.
+
+        Returns:
+            NDArray[float]: Shape: ``(*data.shape, 6)``. The actual, non-mass-normalized inertia
+                tensor about the current center of mass, ordered as
+                ``[Ixx, Iyy, Izz, Ixy, Ixz, Iyz]``.
 
 ### get_joint
 
@@ -365,6 +384,26 @@ Override the center of mass of the link.
             If the center_of_mass components are not finite (NaN or infinity), or the link is
             mocap type, or the link is fixed to world, the override will be ignored.
 
+### set_inertia_override
+
+```python
+def set_inertia_override(self, data: SceneData, inertia: numpy.typing.NDArray[numpy.float32] | Sequence[numpy.float32]) -> None
+```
+
+Override the inertia tensor about the center of mass in the link local frame.
+
+        Args:
+            data: The scene data to modify.
+            inertia: The actual, non-mass-normalized inertia tensor components,
+                ordered as ``[Ixx, Iyy, Izz, Ixy, Ixz, Iyz]``.
+                - Shape (6,): Single tensor applied to all batches
+                - Shape: ``(*data.shape, 6)``: Per-batch tensors
+
+        Note:
+            Invalid tensors are ignored per batch instance. A valid tensor must be finite, have
+            positive principal moments, and satisfy the rigid-body principal-moment triangle
+            inequalities.
+
 ### set_mass_override
 
 ```python
@@ -382,3 +421,34 @@ Override the mass of the link.
         Note:
             If the mass is non-positive or the link is mocap type, or the link is fixed to world,
             the override will be ignored.
+
+### set_principal_inertia_override
+
+```python
+def set_principal_inertia_override(self, data: SceneData, principal_moments: numpy.typing.NDArray[numpy.float32] | Sequence[numpy.float32], principal_axes: numpy.typing.NDArray[numpy.float32] | Sequence[numpy.float32]) -> None
+```
+
+Override the rotational inertia tensor about the center of mass in the link local frame
+        from principal moments and principal axes.
+
+        This is a write convenience over `set_inertia_override`: both inputs are applied
+        atomically in a single call and synthesized into the full inertia tensor
+        ``I = R @ diag(principal_moments) @ R.T`` before reusing the canonical full-inertia
+        override storage.
+
+        Args:
+            data: The scene data to modify.
+            principal_moments: The three principal moments of inertia.
+                - Shape (3,): Single moments applied to all batches
+                - Shape: ``(*data.shape, 3)``: Per-batch moments
+            principal_axes: The ``[x, y, z, w]`` quaternion rotating
+                principal-frame vectors into the link local frame. Normalized internally.
+                - Shape (4,): Single orientation applied to all batches
+                - Shape: ``(*data.shape, 4)``: Per-batch orientations
+
+        Note:
+            Both arguments are broadcast independently, so mixed broadcast / per-batch inputs
+            are allowed. Invalid values are ignored per batch instance: a valid input requires
+            finite, strictly positive principal moments satisfying the rigid-body triangle
+            inequalities, and a finite, normalizable quaternion. When either argument is
+            invalid for an instance, neither is applied to that instance.

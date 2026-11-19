@@ -152,9 +152,10 @@ Note
 | `tendon` | `string` | no | — | If specified, the actuator acts on the given tendon. The actuator length equals  the tendon length times the gear ratio. Both spatial and fixed tendons can be  used. |
 | `kp` | `real` | yes | `1.0` | Position feedback gain. Used internally as gainprm[0] and also negated into  biasprm[1] to produce a restoring force proportional to position error. |
 | `kv` | `real` | no | — | Damping applied by the actuator. Used internally as biasprm[2] (negated) to produce  a force proportional to velocity. When using this attribute, it is recommended to use  the implicitfast or implicit integrators. This explicit damping value is exclusive with  dampratio. |
-| `dampratio` | `real` | no | — | Damping ratio of the position actuator. When specified, the actual damping is computed  at runtime from the current joint inertia as  `2 * dampratio * sqrt(kp * mass / gear[0]^2)`. This attribute is exclusive with kv. |
+| `dampratio` | `real` | no | — | Damping ratio of the position actuator. When specified, the physical damping  coefficient is resolved at model-build time from the initial locked joint inertia as  `2 * dampratio * sqrt(kp * mass / gear[0]^2)`. This attribute is exclusive with kv. |
 | `inheritrange` | `real` | no | — | Automatically sets the actuator's ctrlrange to match the transmission target's range.  A positive value X sets the ctrlrange around the midpoint of the target range, scaled  by X. For example if the target joint has range [0, 1], then a value of 1.0 will set  ctrlrange to [0, 1]; values of 0.8 and 1.2 will set the ctrlrange to [0.1, 0.9] and  [-0.1, 1.1], respectively. Values smaller than 1 are useful for not hitting the  limits; values larger than 1 are useful for maintaining control authority at the  limits. This attribute is exclusive with ctrlrange and available only for joint and  tendon transmissions which have range defined. |
 | `timeconst` | `real` | yes | `0.0` | Time-constant of optional first-order filter. If larger than 0, the actuator will use  the filterexact dynamics type, if 0 (the default), the actuator will use the none dynamics type. |
+| `implicit` | `bool` | yes | `false` | [MPEX] Whether position stiffness uses implicit integration. |
 
 ## actuator/velocity
 

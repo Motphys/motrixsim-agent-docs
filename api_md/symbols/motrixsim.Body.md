@@ -178,6 +178,8 @@ The number of links that belong to this body.
 
 | Name | Signature | Description |
 |------|-----------|-------------|
+| `dof_pos_range` | `(self, include_floatingbase: bool = True) -> slice` | Get the contiguous range of the DoF positions of the body. |
+| `dof_vel_range` | `(self, include_floatingbase: bool = True) -> slice` | Get the contiguous range of the DoF velocities of the body. |
 | `get_dof_pos_indices` | `(self, include_floatingbase: bool = True) -> numpy.typing.NDArray[numpy.uint32]` | Get the indices of the DoF positions of the body. |
 | `get_dof_vel_indices` | `(self, include_floatingbase: bool = True) -> numpy.typing.NDArray[numpy.uint32]` | Get the indices of the DoF velocities of the body. |
 | `get_geom` | `(self, arg: Any) -> Optional[Geom]` | Get a geom that belongs to this body by name or body-local index. |
@@ -192,6 +194,48 @@ The number of links that belong to this body.
 | `set_actuator_ctrls` | `(self, data: SceneData, ctrls: Any) -> None` | Set the control values for all actuators on this body. |
 | `set_dof_pos` | `(self, data: SceneData, dof_pos: Any, include_floatingbase: bool = True) -> None` | Set the DoF positions of the body. |
 | `set_dof_vel` | `(self, data: SceneData, dof_vel: Any, include_floatingbase: bool = True) -> None` | Set the DoF velocities of the body. |
+
+### dof_pos_range
+
+```python
+def dof_pos_range(self, include_floatingbase: bool = True) -> slice
+```
+
+Get the contiguous range of the DoF positions of the body.
+
+        Args:
+            include_floatingbase: Whether to include the floating base DoF positions in
+                the range. If `False`, only the joint DoF positions are covered.
+
+        Returns:
+            slice: The half-open range of the DoF position indices. The covered index set is
+                identical to `get_dof_pos_indices`, and the slice can be used directly as
+                a numpy view index without materializing the index array.
+
+        Note:
+            The DoF layout of a body is always contiguous in motrixsim, so a single half-open
+            range fully describes it. A body without any DoF position returns ``slice(0, 0)``.
+
+### dof_vel_range
+
+```python
+def dof_vel_range(self, include_floatingbase: bool = True) -> slice
+```
+
+Get the contiguous range of the DoF velocities of the body.
+
+        Args:
+            include_floatingbase: Whether to include the floating base DoF velocities in
+                the range. If `False`, only the joint DoF velocities are covered.
+
+        Returns:
+            slice: The half-open range of the DoF velocity indices. The covered index set is
+                identical to `get_dof_vel_indices`, and the slice can be used directly as
+                a numpy view index without materializing the index array.
+
+        Note:
+            The DoF layout of a body is always contiguous in motrixsim, so a single half-open
+            range fully describes it. A body without any DoF velocity returns ``slice(0, 0)``.
 
 ### get_dof_pos_indices
 

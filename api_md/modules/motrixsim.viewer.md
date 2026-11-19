@@ -5,7 +5,7 @@
 ### launch
 
 ```python
-def launch(model: Optional[SceneModel] = None, data: Optional[Any] = None, callback: Optional[Any] = None, play: bool = False) -> None
+def launch(model: Optional[SceneModel] = None, data: Optional[Any] = None, callback: Optional[Any] = None, play: bool = False, blueprint: Optional[Any] = None) -> None
 ```
 
 Launch a managed viewer with optional model and data.
@@ -22,3 +22,5 @@ Launch a managed viewer with optional model and data.
         callback: A callback function called at each physics step.
         play: If True, the viewer starts in the playing (simulation running)
                                state instead of the paused editor state. Defaults to False.
+        blueprint: Initial Viewer blueprint. If omitted,
+            the managed viewer uses its built-in blueprint.

@@ -11,25 +11,10 @@ The Input object represents the input events of the render app.
 
 | Name | Signature | Description |
 |------|-----------|-------------|
-| `is_ctrl_clicked` | `(self, ctrl_id: int) -> bool` | Check whether a control with the given ID is clicked. |
 | `is_key_just_pressed` | `(self, key: str) -> bool` | Check if a key is just pressed. |
 | `is_key_pressed` | `(self, key: str) -> bool` | Check if a key is just pressed. |
 | `is_mouse_just_pressed` | `(self, mouse: str) -> bool` | Check if a mouse button is just pressed. |
 | `mouse_ray` | `(self) -> list[float]` | Returns a ray from camera to mouse click position. |
-
-### is_ctrl_clicked
-
-```python
-def is_ctrl_clicked(self, ctrl_id: int) -> bool
-```
-
-Check whether a control with the given ID is clicked.
-
-        Args:
-            ctrl_id: The ID of the control.
-
-        Returns:
-            bool: True if the control is clicked, False otherwise.
 
 ### is_key_just_pressed
 

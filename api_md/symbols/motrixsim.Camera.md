@@ -11,15 +11,16 @@ The Camera object in the scene.
 | `depth_only` | `bool` | Whether the camera is in depth-only mode. |
 | `far_plane` | `float` | Get the far plane distance of the camera. |
 | `fovy` | `float` | Get the vertical field of view of the camera in degrees. |
-| `index` | `int` | The index of the camera in the `motrixsim.SceneModel.cameras`. |
+| `index` | `Optional[int]` | int \| None: The index of the camera in the `motrixsim.SceneModel.cameras`, |
 | `link` | `Optional[Link]` | Get the link that this camera is attached to. |
 | `model` | `SceneModel` | The scene model that this camera belongs to. |
-| `name` | `Optional[str]` | Option[str]: Get the name of the camera. |
-| `near_plane` | `float` | Get the far plane distance of the camera. |
-| `position_track` | `str` | Get or set the position track mode of the camera. |
+| `name` | `Optional[str]` | Option[str]: Get the name of the camera. The system camera has no name. |
+| `near_plane` | `float` | Get the near plane distance of the camera. |
+| `position_track` | `str` | Get the position track mode of the camera. |
 | `render_target` | `str` | Get the render target of the camera, either "window" or "image". |
-| `rotation_track` | `str` | Get or set the rotation track mode of the camera. |
-| `track_target_link` | `Optional[Link]` | Get or set the link that the camera looks at. |
+| `rotation_track` | `str` | Get the rotation track mode of the camera. |
+| `segmentation` | `str` | Get the segmentation mode of the camera. |
+| `track_target_link` | `Optional[Link]` | Get the link that the camera looks at. |
 
 ### depth_only
 
@@ -48,10 +49,11 @@ Get the vertical field of view of the camera in degrees.
 ### index
 
 ```python
-index: int
+index: Optional[int]
 ```
 
-The index of the camera in the `motrixsim.SceneModel.cameras`.
+int | None: The index of the camera in the `motrixsim.SceneModel.cameras`,
+    or ``None`` for the system camera.
 
 ### link
 
@@ -79,7 +81,7 @@ The scene model that this camera belongs to.
 name: Optional[str]
 ```
 
-Option[str]: Get the name of the camera.
+Option[str]: Get the name of the camera. The system camera has no name.
 
 ### near_plane
 
@@ -87,7 +89,7 @@ Option[str]: Get the name of the camera.
 near_plane: float
 ```
 
-Get the far plane distance of the camera.
+Get the near plane distance of the camera.
 
 ### position_track
 
@@ -95,7 +97,7 @@ Get the far plane distance of the camera.
 position_track: str
 ```
 
-Get or set the position track mode of the camera.
+Get the position track mode of the camera.
 
     Possible values are:
 
@@ -111,13 +113,17 @@ render_target: str
 
 Get the render target of the camera, either "window" or "image".
 
+    Note:
+        The render target is configured on the MSD layer (``msd.Camera.render_target``)
+        before ``build()``; the built model is immutable.
+
 ### rotation_track
 
 ```python
 rotation_track: str
 ```
 
-Get or set the rotation track mode of the camera.
+Get the rotation track mode of the camera.
 
     Possible values are:
 
@@ -127,13 +133,27 @@ Get or set the rotation track mode of the camera.
     - "look_at_link": Always look at the target link. This mode requires setting the
       `track_target_link` attribute.
 
+### segmentation
+
+```python
+segmentation: str
+```
+
+Get the segmentation mode of the camera.
+
+    Possible values are:
+
+    - "disable": Do not render segmentation.
+    - "colorful": Render colorful segmentation.
+    - "id": Render id segmentation.
+
 ### track_target_link
 
 ```python
 track_target_link: Optional[Link]
 ```
 
-Get or set the link that the camera looks at.
+Get the link that the camera looks at.
 
     Note:
         This attribute is only valid when the rotation track mode is "look_at_link".
@@ -143,8 +163,6 @@ Get or set the link that the camera looks at.
 | Name | Signature | Description |
 |------|-----------|-------------|
 | `get_pose` | `(self, data: SceneData) -> numpy.typing.NDArray[numpy.float32]` | Get the world pose of the camera. |
-| `set_near_far` | `(self, near: float, far: float) -> None` | Set the near and far plane of the camera. |
-| `set_render_target` | `(self, target: str, w: int = 400, h: int = 300) -> None` | Set the render target of the camera. |
 
 ### get_pose
 
@@ -160,35 +178,3 @@ Get the world pose of the camera.
         Returns:
             NDArray[float]: Shape: ``(*data.shape, 7)``. Each pose is represented as a 7 elements
                 array with `[x, y, z, qx, qy, qz,qw]` format.
-
-### set_near_far
-
-```python
-def set_near_far(self, near: float, far: float) -> None
-```
-
-Set the near and far plane of the camera.
-
-        Args:
-           near: The near plane distance. Must be positive.
-           far: The far plane distance. Must be larger than near.
-
-### set_render_target
-
-```python
-def set_render_target(self, target: str, w: int = 400, h: int = 300) -> None
-```
-
-Set the render target of the camera.
-
-        Args:
-           target: The render target, either "window" or "image".
-
-           w: The width of the image if the target is "image". ignored if the target is
-           "window".   
-
-           h: The height of the image if the target is "image". ignored if the target is
-           "window".
-
-        Note:
-           This method must be called before you launch the render application.
